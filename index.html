@@ -9,824 +9,515 @@
 <meta name="apple-mobile-web-app-title" content="水分量計算">
 <meta name="theme-color" content="#1a6fa8">
 <style>
-  :root {
-    --primary: #1a6fa8;
-    --primary-light: #e8f4fd;
-    --accent: #0d9488;
-    --accent-light: #e6f7f5;
-    --warn: #b45309;
-    --warn-light: #fef3c7;
-    --danger: #dc2626;
-    --danger-light: #fee2e2;
-    --purple: #6d28d9;
-    --purple-light: #f5f3ff;
-    --gray-50: #f9fafb;
-    --gray-100: #f3f4f6;
-    --gray-200: #e5e7eb;
-    --gray-300: #d1d5db;
-    --gray-600: #4b5563;
-    --gray-700: #374151;
-    --gray-800: #1f2937;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body {
-    height: 100%;
-    font-family: -apple-system, 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
-    background: #e8eef4;
-    color: var(--gray-800);
-    overflow: hidden;
-  }
+:root {
+  --primary:#1a6fa8; --pl:#e8f4fd;
+  --accent:#0d9488;  --al:#e6f7f5;
+  --warn:#b45309;    --wl:#fef3c7;
+  --danger:#dc2626;  --dl:#fee2e2;
+  --purple:#6d28d9;  --prl:#f5f3ff;
+  --g50:#f9fafb; --g100:#f3f4f6; --g200:#e5e7eb;
+  --g300:#d1d5db; --g600:#4b5563; --g700:#374151; --g800:#1f2937;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;font-family:-apple-system,'Helvetica Neue',Arial,'Hiragino Kaku Gothic ProN',sans-serif;background:#e8eef4;color:var(--g800);}
 
-  /* ===== 全体レイアウト ===== */
-  .app {
-    display: flex;
-    flex-direction: column;
-    height: 100dvh;
-    padding: env(safe-area-inset-top, 0px) 0 0;
-  }
+/* ── アプリ全体 ── */
+.app{display:flex;flex-direction:column;height:100dvh;padding-top:env(safe-area-inset-top,0);}
 
-  /* ヘッダー */
-  .header {
-    background: linear-gradient(135deg, #1a6fa8, #0d5a8a);
-    color: white;
-    padding: 8px 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-  }
-  .header h1 { font-size: 0.9rem; font-weight: 700; }
-  .header p { font-size: 0.65rem; opacity: 0.8; }
+/* ヘッダー */
+.hd{background:linear-gradient(135deg,#1a6fa8,#0d5a8a);color:white;padding:7px 12px;display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.hd h1{font-size:.88rem;font-weight:700;}
+.hd p{font-size:.62rem;opacity:.8;}
 
-  /* タブバー */
-  .tabbar {
-    display: flex;
-    background: white;
-    border-bottom: 1px solid var(--gray-200);
-    flex-shrink: 0;
-  }
-  .tabbar button {
-    flex: 1;
-    padding: 8px 4px;
-    border: none;
-    background: transparent;
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: var(--gray-600);
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    font-family: inherit;
-    transition: all 0.15s;
-  }
-  .tabbar button.active {
-    color: var(--primary);
-    border-bottom-color: var(--primary);
-  }
+/* タブバー */
+.tabs{display:flex;background:white;border-bottom:1px solid var(--g200);flex-shrink:0;}
+.tabs button{flex:1;padding:8px 4px;border:none;background:transparent;font-size:.72rem;font-weight:600;color:var(--g600);cursor:pointer;border-bottom:2px solid transparent;font-family:inherit;transition:all .15s;}
+.tabs button.active{color:var(--primary);border-bottom-color:var(--primary);}
 
-  /* コンテンツエリア */
-  .content { flex: 1; overflow: hidden; }
-  .page { display: none; height: 100%; }
-  .page.active { display: flex; flex-direction: column; }
+/* コンテンツ */
+.content{flex:1;min-height:0;}
+.page{display:none;height:100%;}
+.page.active{display:flex;flex-direction:column;}
 
-  /* ===== メイン画面（2カラム） ===== */
-  .main-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-    padding: 6px;
-    height: 100%;
-    overflow: hidden;
-  }
+/* ══ メイン画面：左右2列 ══ */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:6px;height:100%;min-height:0;}
 
-  .col {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-  .col::-webkit-scrollbar { display: none; }
+/* 左列：スクロール可 */
+.lcol{display:flex;flex-direction:column;gap:5px;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.lcol::-webkit-scrollbar{display:none;}
 
-  /* カード */
-  .card {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.07);
-    overflow: hidden;
-    flex-shrink: 0;
-  }
-  .card-title {
-    font-size: 0.68rem;
-    font-weight: 700;
-    padding: 5px 8px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .card-title.blue { background: var(--primary-light); color: var(--primary); border-bottom: 1.5px solid var(--primary); }
-  .card-title.teal { background: var(--accent-light); color: var(--accent); border-bottom: 1.5px solid var(--accent); }
-  .card-title.amber { background: var(--warn-light); color: var(--warn); border-bottom: 1.5px solid var(--warn); }
-  .card-title.purple { background: var(--purple-light); color: var(--purple); border-bottom: 1.5px solid var(--purple); }
-  .card-body { padding: 6px 8px; }
+/* 右列：左列と同じ高さ・内部で均等配置 */
+.rcol{display:flex;flex-direction:column;gap:5px;overflow:hidden;}
+.rcol .card-water{flex-shrink:0;}
+.rcol .card-energy{flex:1;display:flex;flex-direction:column;min-height:0;}
+.rcol .card-energy .cb{flex:1;display:flex;flex-direction:column;justify-content:space-between;min-height:0;padding:7px 8px;}
 
-  /* 性別トグル */
-  .gender-toggle {
-    display: flex;
-    border-radius: 6px;
-    overflow: hidden;
-    border: 1.5px solid var(--gray-200);
-    margin-bottom: 5px;
-  }
-  .gender-toggle input { display: none; }
-  .gender-toggle label {
-    flex: 1;
-    text-align: center;
-    padding: 6px;
-    cursor: pointer;
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: var(--gray-600);
-    transition: all 0.15s;
-  }
-  .gender-toggle input:checked + label { background: var(--primary); color: white; }
+/* カード共通 */
+.card{background:white;border-radius:8px;box-shadow:0 1px 2px rgba(0,0,0,.07);overflow:hidden;flex-shrink:0;}
+.ct{font-size:.67rem;font-weight:700;padding:5px 8px;display:flex;align-items:center;gap:4px;}
+.ct.bl{background:var(--pl);color:var(--primary);border-bottom:1.5px solid var(--primary);}
+.ct.tl{background:var(--al);color:var(--accent);border-bottom:1.5px solid var(--accent);}
+.ct.am{background:var(--wl);color:var(--warn);border-bottom:1.5px solid var(--warn);}
+.ct.pu{background:var(--prl);color:var(--purple);border-bottom:1.5px solid var(--purple);}
+.cb{padding:6px 8px;}
 
-  /* 入力グリッド */
-  .inputs-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 4px;
-    margin-bottom: 5px;
-  }
-  .inp-wrap label {
-    display: block;
-    font-size: 0.6rem;
-    font-weight: 600;
-    color: var(--gray-600);
-    margin-bottom: 2px;
-  }
-  .inp-row {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    background: var(--gray-50);
-    border: 1.5px solid var(--gray-200);
-    border-radius: 5px;
-    padding: 4px 5px;
-  }
-  .inp-row input {
-    flex: 1;
-    border: none;
-    background: transparent;
-    font-size: 0.85rem;
-    font-family: inherit;
-    min-width: 0;
-    -webkit-appearance: none;
-  }
-  .inp-row input:focus { outline: none; }
-  .inp-row .unit { font-size: 0.58rem; color: var(--gray-600); white-space: nowrap; }
+/* 性別トグル */
+.gender{display:flex;border-radius:6px;overflow:hidden;border:1.5px solid var(--g200);margin-bottom:5px;}
+.gender input{display:none;}
+.gender label{flex:1;text-align:center;padding:7px;cursor:pointer;font-size:.8rem;font-weight:600;color:var(--g600);transition:all .15s;}
+.gender input:checked+label{background:var(--primary);color:white;}
 
-  /* スライダー */
-  .slider-wrap { margin-bottom: 5px; }
-  .slider-wrap:last-child { margin-bottom: 0; }
-  .slider-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2px;
-  }
-  .slider-lbl { font-size: 0.62rem; font-weight: 600; color: var(--gray-600); }
-  .slider-badge {
-    font-size: 0.68rem;
-    font-weight: 700;
-    color: var(--primary);
-    background: var(--primary-light);
-    padding: 1px 6px;
-    border-radius: 99px;
-  }
-  input[type=range] {
-    width: 100%;
-    accent-color: var(--primary);
-    cursor: pointer;
-    height: 3px;
-  }
-  .slider-hints {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 1px;
-  }
-  .sh { font-size: 0.55rem; color: var(--gray-600); text-align: center; flex: 1; line-height: 1.3; }
-  .sh:first-child { text-align: left; }
-  .sh:last-child { text-align: right; }
-  .sh.warn { color: var(--danger); font-weight: 600; }
+/* 入力フィールド */
+.ilist{display:flex;flex-direction:column;gap:4px;margin-bottom:5px;}
+.iw label{display:block;font-size:.6rem;font-weight:600;color:var(--g600);margin-bottom:2px;}
+.ir{display:flex;align-items:center;gap:2px;background:var(--g50);border:1.5px solid var(--g200);border-radius:5px;padding:5px 6px;}
+.ir input{flex:1;border:none;background:transparent;font-size:.88rem;font-family:inherit;min-width:0;-webkit-appearance:none;}
+.ir input:focus{outline:none;}
+.ir .u{font-size:.58rem;color:var(--g600);white-space:nowrap;}
 
-  /* ===== 結果 ===== */
-  /* TEEボックス */
-  .tee-box {
-    background: linear-gradient(135deg, var(--primary-light), #d0e8ff);
-    border: 1.5px solid var(--primary);
-    border-radius: 7px;
-    padding: 10px 8px;
-    text-align: center;
-  }
-  .tee-lbl { font-size: 0.6rem; color: var(--primary); font-weight: 700; }
-  .tee-val { font-size: 1.9rem; font-weight: 800; color: var(--primary); line-height: 1.2; }
-  .tee-sub { font-size: 0.6rem; color: var(--gray-600); margin-top: 2px; }
+/* スライダー */
+.sw{margin-bottom:5px;}
+.sw:last-child{margin-bottom:0;}
+.sh2{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;}
+.sl{font-size:.62rem;font-weight:600;color:var(--g600);}
+.sb{font-size:.68rem;font-weight:700;color:var(--primary);background:var(--pl);padding:1px 7px;border-radius:99px;}
+input[type=range]{width:100%;accent-color:var(--primary);cursor:pointer;height:3px;}
+.hints{display:flex;justify-content:space-between;margin-top:2px;}
+.hi{font-size:.55rem;color:var(--g600);text-align:center;flex:1;line-height:1.3;}
+.hi:first-child{text-align:left;}
+.hi:last-child{text-align:right;}
+.hi.w{color:var(--danger);font-weight:600;}
 
-  /* 結果グリッド */
-  .res-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 5px;
-    margin-bottom: 5px;
-  }
-  .res-card {
-    border-radius: 6px;
-    padding: 8px 10px;
-  }
-  .res-card.wide { grid-column: 1/-1; }
-  .res-card.blue { background: var(--primary-light); border-left: 3px solid var(--primary); }
-  .res-card.teal { background: var(--accent-light); border-left: 3px solid var(--accent); }
-  .res-card.amber { background: var(--warn-light); border-left: 3px solid var(--warn); }
-  .res-card.danger { background: var(--danger-light); border-left: 3px solid var(--danger); }
-  .res-card.gray { background: var(--gray-50); border-left: 3px solid var(--gray-300); }
-  .res-card.purple { background: var(--purple-light); border-left: 3px solid var(--purple); }
-  .res-lbl { font-size: 0.58rem; color: var(--gray-600); margin-bottom: 1px; }
-  .res-val { font-size: 1.2rem; font-weight: 700; line-height: 1.2; }
-  .res-val.blue { color: var(--primary); }
-  .res-val.teal { color: var(--accent); }
-  .res-val.amber { color: var(--warn); }
-  .res-val.danger { color: var(--danger); }
-  .res-val.gray { color: var(--gray-600); }
-  .res-val.purple { color: var(--purple); }
-  .res-unit { font-size: 0.6rem; font-weight: 400; }
-  .res-sub { font-size: 0.58rem; color: var(--gray-600); margin-top: 1px; line-height: 1.3; }
+/* TEEボックス */
+.tee{background:linear-gradient(135deg,var(--pl),#d0e8ff);border:1.5px solid var(--primary);border-radius:7px;padding:8px;text-align:center;}
+.tee-l{font-size:.58rem;color:var(--primary);font-weight:700;}
+.tee-v{font-size:1.75rem;font-weight:800;color:var(--primary);line-height:1.2;}
+.tee-s{font-size:.58rem;color:var(--g600);margin-top:1px;}
 
-  /* 行形式の結果 */
-  .res-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 3px 0;
-    border-bottom: 1px solid var(--gray-100);
-    font-size: 0.72rem;
-  }
-  .res-row:last-child { border-bottom: none; }
-  .res-row-lbl { color: var(--gray-700); }
-  .res-row-val { font-weight: 700; }
+/* 結果グリッド */
+.rg{display:grid;grid-template-columns:1fr 1fr;gap:4px;}
+.rg.wide .rc:last-child{grid-column:1/-1;}
+.rc{border-radius:6px;padding:6px 8px;}
+.rc.bl{background:var(--pl);border-left:3px solid var(--primary);}
+.rc.tl{background:var(--al);border-left:3px solid var(--accent);}
+.rc.am{background:var(--wl);border-left:3px solid var(--warn);}
+.rc.dn{background:var(--dl);border-left:3px solid var(--danger);}
+.rc.gy{background:var(--g50);border-left:3px solid var(--g300);}
+.rc.pu{background:var(--prl);border-left:3px solid var(--purple);}
+.rl{font-size:.6rem;color:var(--g600);margin-bottom:1px;}
+.rv{font-size:1.1rem;font-weight:700;line-height:1.2;}
+.rv.bl{color:var(--primary);}
+.rv.tl{color:var(--accent);}
+.rv.am{color:var(--warn);}
+.rv.dn{color:var(--danger);}
+.rv.gy{color:var(--g600);}
+.rv.pu{color:var(--purple);}
+.ru{font-size:.6rem;font-weight:400;}
+.rs{font-size:.58rem;color:var(--g600);margin-top:1px;line-height:1.3;}
 
-  /* バッジ */
-  .badge {
-    display: inline-block;
-    padding: 1px 5px;
-    border-radius: 99px;
-    font-size: 0.6rem;
-    font-weight: 600;
-    margin-left: 3px;
-  }
-  .b-warn { background: #fef3c7; color: #92400e; }
-  .b-danger { background: #fee2e2; color: #991b1b; }
-  .b-ok { background: #dcfce7; color: #166534; }
+/* BEE行 */
+.bee-row{display:flex;justify-content:space-between;align-items:center;font-size:.72rem;padding:4px 0;}
+.bee-sub{font-size:.58rem;color:var(--g600);}
 
-  /* コピーボタン */
-  .copy-btn {
-    width: 100%;
-    padding: 7px;
-    background: var(--accent);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: inherit;
-    margin-top: 4px;
-  }
-  .copy-toast {
-    text-align: center;
-    font-size: 0.68rem;
-    color: var(--accent);
-    font-weight: 600;
-    margin-top: 3px;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-  .copy-toast.show { opacity: 1; }
+/* コピーボタン */
+.cpbtn{width:100%;padding:7px;background:var(--accent);color:white;border:none;border-radius:6px;font-size:.75rem;font-weight:700;cursor:pointer;font-family:inherit;}
+.cptoast{text-align:center;font-size:.65rem;color:var(--accent);font-weight:600;opacity:0;transition:opacity .3s;margin-top:2px;}
+.cptoast.show{opacity:1;}
 
-  /* ===== 欠乏量・ΔNaページ ===== */
-  .scroll-page {
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 6px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .card-wide { background: white; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.07); overflow: hidden; }
-  .notice {
-    border-radius: 6px;
-    padding: 6px 8px;
-    font-size: 0.68rem;
-    line-height: 1.5;
-    margin-top: 5px;
-  }
-  .notice.blue { background: var(--primary-light); color: #1e40af; }
-  .notice.amber { background: var(--warn-light); color: #92400e; }
-  .notice.red { background: #fff0f0; border: 1px solid #fca5a5; color: #991b1b; }
-  .notice.indigo { background: #eef2ff; border: 1px solid #a5b4fc; color: #3730a3; }
-  .sec-title {
-    font-size: 0.65rem;
-    font-weight: 700;
-    color: var(--gray-600);
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    margin: 8px 0 5px;
-    padding-bottom: 3px;
-    border-bottom: 1px solid var(--gray-100);
-  }
-  .delta-inputs {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 8px;
-  }
+/* ══ 欠乏量・ΔNaページ ══ */
+.scroll-page{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:6px;display:flex;flex-direction:column;gap:6px;}
+.wcard{background:white;border-radius:8px;box-shadow:0 1px 2px rgba(0,0,0,.07);overflow:hidden;}
+.wcard .ct{padding:8px 12px;}
+.wcard .cb{padding:8px 12px;}
+.sec{font-size:.63rem;font-weight:700;color:var(--g600);text-transform:uppercase;letter-spacing:.07em;margin:8px 0 5px;padding-bottom:3px;border-bottom:1px solid var(--g100);}
+.rrow{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--g100);font-size:.75rem;}
+.rrow:last-child{border-bottom:none;}
+.rrow-l{color:var(--g700);}
+.rrow-v{font-weight:700;}
+.notice{border-radius:6px;padding:7px 9px;font-size:.68rem;line-height:1.5;margin-top:5px;}
+.notice.bl{background:var(--pl);color:#1e40af;}
+.notice.am{background:var(--wl);color:#92400e;}
+.notice.rd{background:#fff0f0;border:1px solid #fca5a5;color:#991b1b;}
+.notice.in{background:#eef2ff;border:1px solid #a5b4fc;color:#3730a3;}
+.badge{display:inline-block;padding:1px 5px;border-radius:99px;font-size:.6rem;font-weight:600;margin-left:3px;}
+.bw{background:#fef3c7;color:#92400e;}
+.bd{background:#fee2e2;color:#991b1b;}
+.bo{background:#dcfce7;color:#166534;}
+.dinputs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
 </style>
 </head>
 <body>
 <div class="app">
 
-  <!-- ヘッダー -->
-  <div class="header">
-    <span style="font-size:1.3rem;">🏥</span>
-    <div>
-      <h1>水分量・必要量・欠乏量 計算</h1>
-      <p>リアルタイム計算 ／ スライダーを動かすと即反映</p>
-    </div>
-  </div>
+<div class="hd">
+  <span style="font-size:1.3rem">🏥</span>
+  <div><h1>水分量・必要量・欠乏量 計算</h1><p>スライダーを動かすと即反映</p></div>
+</div>
 
-  <!-- タブバー -->
-  <div class="tabbar">
-    <button class="active" onclick="showPage('main',this)">📝 入力・エネルギー</button>
-    <button onclick="showPage('deficit',this)">⚠️ 欠乏量</button>
-    <button onclick="showPage('delta',this)">📐 ΔNa</button>
-  </div>
+<div class="tabs">
+  <button class="active" onclick="showPage('main',this)">📝 入力・エネルギー</button>
+  <button onclick="showPage('deficit',this)">⚠️ 欠乏量</button>
+  <button onclick="showPage('delta',this)">📐 ΔNa</button>
+</div>
 
-  <!-- コンテンツ -->
-  <div class="content">
+<div class="content">
 
-    <!-- ===== メイン（入力＋エネルギー） ===== -->
-    <div id="page-main" class="page active">
-      <div class="main-grid">
+<!-- ══ メイン ══ -->
+<div id="page-main" class="page active">
+<div class="grid2">
 
-        <!-- 左：入力 -->
-        <div class="col">
-
-          <div class="card">
-            <div class="card-title blue">👤 患者情報</div>
-            <div class="card-body">
-              <div class="gender-toggle">
-                <input type="radio" name="gender" id="male" value="male">
-                <label for="male">♂ 男性</label>
-                <input type="radio" name="gender" id="female" value="female" checked>
-                <label for="female">♀ 女性</label>
-              </div>
-              <div class="inputs-grid">
-                <div class="inp-wrap">
-                  <label>体重</label>
-                  <div class="inp-row">
-                    <input type="number" id="weight" value="25.1" step="0.1" min="0">
-                    <span class="unit">kg</span>
-                  </div>
-                </div>
-                <div class="inp-wrap">
-                  <label>尿量</label>
-                  <div class="inp-row">
-                    <input type="number" id="urine" value="30" step="1" min="0">
-                    <span class="unit">ml/h</span>
-                  </div>
-                </div>
-                <div class="inp-wrap">
-                  <label>血清 Na</label>
-                  <div class="inp-row">
-                    <input type="number" id="na" value="126" step="0.1" min="0">
-                    <span class="unit">mEq/L</span>
-                  </div>
-                </div>
-                <div class="inp-wrap">
-                  <label>血清 K</label>
-                  <div class="inp-row">
-                    <input type="number" id="k" value="5.5" step="0.1" min="0">
-                    <span class="unit">mEq/L</span>
-                  </div>
-                </div>
-                <div class="inp-wrap">
-                  <label>Hct</label>
-                  <div class="inp-row">
-                    <input type="number" id="hct" value="32.3" step="0.1" min="0" max="100">
-                    <span class="unit">%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-title teal">⚡ 補正係数・栄養設定</div>
-            <div class="card-body">
-
-              <div class="slider-wrap">
-                <div class="slider-head">
-                  <span class="slider-lbl">活動係数（AF）</span>
-                  <span class="slider-badge" id="af-val">1.0</span>
-                </div>
-                <input type="range" id="af" min="1.0" max="1.5" step="0.1" value="1.0">
-                <div class="slider-hints">
-                  <span class="sh">寝たきり<br>1.0〜1.1</span>
-                  <span class="sh">ベッド上<br>1.2</span>
-                  <span class="sh">トイレ<br>1.3</span>
-                  <span class="sh">一般職業<br>1.5</span>
-                </div>
-              </div>
-
-              <div class="slider-wrap">
-                <div class="slider-head">
-                  <span class="slider-lbl">損傷係数（SF）</span>
-                  <span class="slider-badge" id="sf-val">1.20</span>
-                </div>
-                <input type="range" id="sf" min="0.7" max="1.5" step="0.05" value="1.2">
-                <div class="slider-hints">
-                  <span class="sh">飢餓<br>0.7</span>
-                  <span class="sh">無し<br>1.0</span>
-                  <span class="sh">定時手術<br>1.2</span>
-                  <span class="sh">外傷<br>1.35</span>
-                  <span class="sh">重症<br>1.5</span>
-                </div>
-              </div>
-
-              <div class="slider-wrap">
-                <div class="slider-head">
-                  <span class="slider-lbl">蛋白質必要量</span>
-                  <span class="slider-badge" id="protein-val">1.0 g/kg</span>
-                </div>
-                <input type="range" id="protein-factor" min="0.6" max="2.0" step="0.1" value="1.0">
-                <div class="slider-hints">
-                  <span class="sh warn">腎不全<br>0.6〜0.8</span>
-                  <span class="sh">標準<br>1.0〜1.2</span>
-                  <span class="sh">術後/<br>感染症<br>1.2〜1.5</span>
-                  <span class="sh warn">熱傷/<br>重症<br>1.5〜2.0</span>
-                </div>
-              </div>
-
-              <div class="slider-wrap">
-                <div class="slider-head">
-                  <span class="slider-lbl">脂質比率（TEE比）</span>
-                  <span class="slider-badge" id="fat-val">30%</span>
-                </div>
-                <input type="range" id="fat-factor" min="20" max="40" step="5" value="30">
-                <div class="slider-hints">
-                  <span class="sh warn">脂質<br>代謝異常<br>20%</span>
-                  <span class="sh">標準<br>25〜30%</span>
-                  <span class="sh warn">呼吸不全<br>CO₂↓<br>35〜40%</span>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-        </div><!-- /左 -->
-
-        <!-- 右：結果 -->
-        <div class="col">
-
-          <div class="card">
-            <div class="card-title blue">💧 水分必要量</div>
-            <div class="card-body">
-              <div class="res-grid">
-                <div class="res-card blue">
-                  <div class="res-lbl">30 ml/kg法</div>
-                  <div class="res-val blue" id="r-water30">—<span class="res-unit">ml/日</span></div>
-                  <div class="res-sub" id="r-water30-sub"></div>
-                </div>
-                <div class="res-card teal">
-                  <div class="res-lbl">尿量＋不感蒸泄</div>
-                  <div class="res-val teal" id="r-water-urine">—<span class="res-unit">ml/日</span></div>
-                  <div class="res-sub" id="r-water-urine-sub"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-title teal">⚡ 必要エネルギー量</div>
-            <div class="card-body">
-              <div class="tee-box">
-                <div class="tee-lbl">TEE = BEE × AF × SF</div>
-                <div class="tee-val" id="r-tee">—<span style="font-size:0.8rem;font-weight:400;"> kcal/日</span></div>
-                <div class="tee-sub" id="r-tee-sub"></div>
-              </div>
-              <div class="res-card blue wide" style="margin-bottom:4px;">
-                <div class="res-row">
-                  <span class="res-row-lbl" id="r-bee-label">BEE</span>
-                  <span class="res-row-val" style="color:var(--primary);" id="r-bee">—</span>
-                </div>
-                <div class="res-sub" id="r-bee-formula" style="margin-top:2px;"></div>
-              </div>
-              <div class="res-grid">
-                <div class="res-card blue">
-                  <div class="res-lbl">蛋白質</div>
-                  <div class="res-val blue" id="r-protein-g">—<span class="res-unit">g</span></div>
-                  <div class="res-sub" id="r-protein-sub"></div>
-                </div>
-                <div class="res-card teal">
-                  <div class="res-lbl" id="r-fat-label">脂質</div>
-                  <div class="res-val teal" id="r-fat-g">—<span class="res-unit">g</span></div>
-                  <div class="res-sub" id="r-fat-sub"></div>
-                </div>
-                <div class="res-card amber wide">
-                  <div class="res-lbl">糖質</div>
-                  <div class="res-val amber" id="r-carb">—<span class="res-unit">kcal</span></div>
-                  <div class="res-sub" id="r-carb-sub"></div>
-                </div>
-              </div>
-              <button class="copy-btn" onclick="copyResults()">📋 カルテ用にコピー</button>
-              <div class="copy-toast" id="copy-toast">コピーしました！</div>
-            </div>
-          </div>
-
-        </div><!-- /右 -->
+  <!-- 左列 -->
+  <div class="lcol">
+    <div class="card">
+      <div class="ct bl">👤 患者情報</div>
+      <div class="cb">
+        <div class="gender">
+          <input type="radio" name="gender" id="male" value="male">
+          <label for="male">♂ 男性</label>
+          <input type="radio" name="gender" id="female" value="female" checked>
+          <label for="female">♀ 女性</label>
+        </div>
+        <div class="ilist">
+          <div class="iw"><label>体重</label><div class="ir"><input type="number" id="weight" value="25.1" step="0.1" min="0"><span class="u">kg</span></div></div>
+          <div class="iw"><label>尿量</label><div class="ir"><input type="number" id="urine" value="30" step="1" min="0"><span class="u">ml/h</span></div></div>
+          <div class="iw"><label>血清 Na</label><div class="ir"><input type="number" id="na" value="126" step="0.1" min="0"><span class="u">mEq/L</span></div></div>
+          <div class="iw"><label>血清 K</label><div class="ir"><input type="number" id="k" value="5.5" step="0.1" min="0"><span class="u">mEq/L</span></div></div>
+          <div class="iw"><label>Hct</label><div class="ir"><input type="number" id="hct" value="32.3" step="0.1" min="0" max="100"><span class="u">%</span></div></div>
+        </div>
       </div>
-    </div><!-- /メイン -->
+    </div>
 
-    <!-- ===== 欠乏量ページ ===== -->
-    <div id="page-deficit" class="page">
-      <div class="scroll-page">
-        <div class="card-wide">
-          <div class="card-title amber" style="padding:8px 12px;">⚠️ 欠乏量の計算</div>
-          <div class="card-body" style="padding:8px 12px;">
+    <div class="card">
+      <div class="ct tl">⚡ 補正係数・栄養設定</div>
+      <div class="cb">
+        <div class="sw">
+          <div class="sh2"><span class="sl">活動係数（AF）</span><span class="sb" id="af-val">1.0</span></div>
+          <input type="range" id="af" min="1.0" max="1.5" step="0.1" value="1.0">
+          <div class="hints">
+            <span class="hi">寝たきり<br>1.0〜1.1</span>
+            <span class="hi">ベッド上<br>1.2</span>
+            <span class="hi">トイレ<br>1.3</span>
+            <span class="hi">一般職業<br>1.5</span>
+          </div>
+        </div>
+        <div class="sw">
+          <div class="sh2"><span class="sl">損傷係数（SF）</span><span class="sb" id="sf-val">1.20</span></div>
+          <input type="range" id="sf" min="0.7" max="1.5" step="0.05" value="1.2">
+          <div class="hints">
+            <span class="hi">飢餓<br>0.7</span>
+            <span class="hi">無し<br>1.0</span>
+            <span class="hi">定時手術<br>1.2</span>
+            <span class="hi">外傷<br>1.35</span>
+            <span class="hi">重症<br>1.5</span>
+          </div>
+        </div>
+        <div class="sw">
+          <div class="sh2"><span class="sl">蛋白質必要量</span><span class="sb" id="protein-val">1.0 g/kg</span></div>
+          <input type="range" id="protein-factor" min="0.6" max="2.0" step="0.1" value="1.0">
+          <div class="hints">
+            <span class="hi w">腎不全<br>0.6〜0.8</span>
+            <span class="hi">標準<br>1.0〜1.2</span>
+            <span class="hi">術後/<br>感染症<br>1.2〜1.5</span>
+            <span class="hi w">熱傷/<br>重症<br>1.5〜2.0</span>
+          </div>
+        </div>
+        <div class="sw">
+          <div class="sh2"><span class="sl">脂質比率（TEE比）</span><span class="sb" id="fat-val">30%</span></div>
+          <input type="range" id="fat-factor" min="20" max="40" step="5" value="30">
+          <div class="hints">
+            <span class="hi w">脂質<br>代謝異常<br>20%</span>
+            <span class="hi">標準<br>25〜30%</span>
+            <span class="hi w">呼吸不全<br>CO₂↓<br>35〜40%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /lcol -->
 
-            <div class="sec-title">検査値</div>
-            <div class="res-grid">
-              <div class="res-card" id="r-na-card">
-                <div class="res-lbl">血清 Na <span id="r-na-badge"></span></div>
-                <div class="res-val" id="r-na-val">—<span class="res-unit">mEq/L</span></div>
-                <div class="res-sub">正常: 135〜145</div>
-              </div>
-              <div class="res-card" id="r-k-card">
-                <div class="res-lbl">血清 K <span id="r-k-badge"></span></div>
-                <div class="res-val" id="r-k-val">—<span class="res-unit">mEq/L</span></div>
-                <div class="res-sub">正常: 3.5〜5.0</div>
-              </div>
-            </div>
+  <!-- 右列 -->
+  <div class="rcol">
 
-            <div class="sec-title">水分欠乏量</div>
-            <div class="res-card blue wide" style="margin-bottom:5px;">
-              <div class="res-row">
-                <span class="res-row-lbl">高Na血症時（Na基準）<span id="r-water-hina-badge"></span></span>
-                <span class="res-row-val" id="r-water-hina">—</span>
-              </div>
-              <div class="res-sub" id="r-water-hina-formula" style="margin-top:2px;"></div>
-            </div>
-            <div class="res-card teal wide" style="margin-bottom:4px;">
-              <div class="res-row">
-                <span class="res-row-lbl">Hct使用法<span id="r-water-hct-badge"></span></span>
-                <span class="res-row-val" id="r-water-hct">—</span>
-              </div>
-              <div class="res-sub" id="r-water-hct-formula" style="margin-top:2px;"></div>
-            </div>
-            <div class="notice amber" id="r-water-notice" style="display:none;">⚠️ 負値のため使用不可（低Na血症時）</div>
-
-            <div class="sec-title">Na欠乏量</div>
-            <div class="res-card wide" id="r-na-def-card" style="margin-bottom:4px;">
-              <div class="res-row">
-                <span class="res-row-lbl" id="r-na-def-label">Na欠乏量</span>
-                <span class="res-row-val" id="r-na-def">—</span>
-              </div>
-              <div class="res-sub" id="r-na-def-formula" style="margin-top:2px;"></div>
-            </div>
-
-            <div class="sec-title">K欠乏量</div>
-            <div class="res-grid">
-              <div class="res-card" id="r-k-high-card">
-                <div class="res-lbl">K &gt; 3 mEq/L 時</div>
-                <div class="res-val" id="r-k-high">—<span class="res-unit">mEq</span></div>
-                <div class="res-sub">(4−K) × 100</div>
-              </div>
-              <div class="res-card" id="r-k-low-card">
-                <div class="res-lbl">K ≦ 3 mEq/L 時</div>
-                <div class="res-val" id="r-k-low">—<span class="res-unit">mEq</span></div>
-                <div class="res-sub">(4−K) × 200</div>
-              </div>
-            </div>
-            <div class="notice indigo" style="margin-top:6px;">📌 <strong>K投与３原則：</strong>濃度 ≦ 40 mEq/L｜速度 ≦ 20 mEq/h｜1日量 ≦ 100 mEq</div>
-            <div class="notice red" id="r-k-notice" style="display:none;">⚠️ K高値のため補充不要または禁忌の可能性があります。</div>
+    <div class="card card-water">
+      <div class="ct bl">💧 水分必要量</div>
+      <div class="cb">
+        <div class="rg">
+          <div class="rc bl">
+            <div class="rl">30 ml/kg法</div>
+            <div class="rv bl" id="r-w30">—<span class="ru">ml/日</span></div>
+            <div class="rs" id="r-w30s"></div>
+          </div>
+          <div class="rc tl">
+            <div class="rl">尿量＋不感蒸泄</div>
+            <div class="rv tl" id="r-wur">—<span class="ru">ml/日</span></div>
+            <div class="rs" id="r-wurs"></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ===== ΔNaページ ===== -->
-    <div id="page-delta" class="page">
-      <div class="scroll-page">
-        <div class="card-wide">
-          <div class="card-title purple" style="padding:8px 12px;">📐 ΔNa値（Adrogue-Medias式）</div>
-          <div class="card-body" style="padding:8px 12px;">
-            <div class="notice blue" style="margin-bottom:10px;">ℹ️ 輸液1L投与時の予測Na濃度変化（mEq/L）を計算します</div>
-            <div class="delta-inputs">
-              <div class="inp-wrap">
-                <label>輸液中 Na</label>
-                <div class="inp-row">
-                  <input type="number" id="fluid-na" value="154" step="1" min="0">
-                  <span class="unit">mEq/L</span>
-                </div>
-              </div>
-              <div class="inp-wrap">
-                <label>輸液中 K</label>
-                <div class="inp-row">
-                  <input type="number" id="fluid-k" value="0" step="1" min="0">
-                  <span class="unit">mEq/L</span>
-                </div>
-              </div>
-            </div>
-            <div class="res-card purple wide" style="margin-bottom:8px;">
-              <div class="res-lbl">輸液1L投与時の予測Na変化</div>
-              <div class="res-val purple" id="r-delta-na" style="font-size:1.4rem;">—<span class="res-unit">mEq/L</span></div>
-              <div class="res-sub" id="r-delta-formula" style="margin-top:4px;"></div>
-            </div>
-            <div class="res-card gray wide">
-              <div class="res-row">
-                <span class="res-row-lbl">TBW（体液総量）</span>
-                <span class="res-row-val gray" id="r-tbw">—</span>
-              </div>
-              <div class="res-sub" id="r-tbw-sub" style="margin-top:2px;"></div>
-            </div>
-            <div class="notice amber" style="margin-top:8px;">⚠️ 1時間あたりのNa上昇は0.5 mEq/L以下、1日あたり10〜12 mEq/L以下を目標（橋中心髄鞘崩壊症の予防）</div>
+    <div class="card card-energy">
+      <div class="ct tl">⚡ 必要エネルギー量</div>
+      <div class="cb">
+        <div class="tee">
+          <div class="tee-l">TEE = BEE × AF × SF</div>
+          <div class="tee-v" id="r-tee">—<span style="font-size:.8rem;font-weight:400"> kcal/日</span></div>
+          <div class="tee-s" id="r-tees"></div>
+        </div>
+        <div class="rc bl" style="margin-top:0;">
+          <div class="bee-row">
+            <span id="r-bee-l" style="font-size:.68rem;color:var(--g700);">BEE</span>
+            <span id="r-bee" style="font-weight:700;color:var(--primary);font-size:.85rem;">—</span>
+          </div>
+          <div class="bee-sub" id="r-beef"></div>
+        </div>
+        <div class="rg wide">
+          <div class="rc bl">
+            <div class="rl">蛋白質</div>
+            <div class="rv bl" id="r-pg">—<span class="ru">g</span></div>
+            <div class="rs" id="r-ps"></div>
+          </div>
+          <div class="rc tl">
+            <div class="rl" id="r-fl">脂質</div>
+            <div class="rv tl" id="r-fg">—<span class="ru">g</span></div>
+            <div class="rs" id="r-fs"></div>
+          </div>
+          <div class="rc am">
+            <div class="rl">糖質</div>
+            <div class="rv am" id="r-carb">—<span class="ru">kcal</span></div>
+            <div class="rs" id="r-carbs"></div>
           </div>
         </div>
+        <button class="cpbtn" onclick="copyResults()">📋 カルテ用にコピー</button>
+        <div class="cptoast" id="cpt">コピーしました！</div>
       </div>
     </div>
 
-  </div><!-- /content -->
+  </div><!-- /rcol -->
+</div>
+</div><!-- /page-main -->
+
+<!-- ══ 欠乏量 ══ -->
+<div id="page-deficit" class="page">
+<div class="scroll-page">
+  <div class="wcard">
+    <div class="ct am">⚠️ 欠乏量の計算</div>
+    <div class="cb">
+      <div class="sec">検査値</div>
+      <div class="rg">
+        <div class="rc" id="r-na-card">
+          <div class="rl">血清 Na <span id="r-na-badge"></span></div>
+          <div class="rv" id="r-na-val">—<span class="ru">mEq/L</span></div>
+          <div class="rs">正常: 135〜145</div>
+        </div>
+        <div class="rc" id="r-k-card">
+          <div class="rl">血清 K <span id="r-k-badge"></span></div>
+          <div class="rv" id="r-k-val">—<span class="ru">mEq/L</span></div>
+          <div class="rs">正常: 3.5〜5.0</div>
+        </div>
+      </div>
+      <div class="sec">水分欠乏量</div>
+      <div class="rc bl" style="margin-bottom:5px;">
+        <div class="rrow"><span class="rrow-l">高Na血症時（Na基準）<span id="r-whina-b"></span></span><span class="rrow-v" id="r-whina">—</span></div>
+        <div class="rs" id="r-whinas"></div>
+      </div>
+      <div class="rc tl" style="margin-bottom:4px;">
+        <div class="rrow"><span class="rrow-l">Hct使用法<span id="r-whct-b"></span></span><span class="rrow-v" id="r-whct">—</span></div>
+        <div class="rs" id="r-whcts"></div>
+      </div>
+      <div class="notice am" id="r-wnotice" style="display:none;">⚠️ 負値のため使用不可（低Na血症時）</div>
+      <div class="sec">Na欠乏量</div>
+      <div class="rc" id="r-nadef-card" style="margin-bottom:4px;">
+        <div class="rrow"><span class="rrow-l" id="r-nadef-l">Na欠乏量</span><span class="rrow-v" id="r-nadef">—</span></div>
+        <div class="rs" id="r-nadefs"></div>
+      </div>
+      <div class="sec">K欠乏量</div>
+      <div class="rg">
+        <div class="rc" id="r-kh-card">
+          <div class="rl">K &gt; 3 mEq/L 時</div>
+          <div class="rv" id="r-kh">—<span class="ru">mEq</span></div>
+          <div class="rs">(4−K) × 100</div>
+        </div>
+        <div class="rc" id="r-kl-card">
+          <div class="rl">K ≦ 3 mEq/L 時</div>
+          <div class="rv" id="r-kl">—<span class="ru">mEq</span></div>
+          <div class="rs">(4−K) × 200</div>
+        </div>
+      </div>
+      <div class="notice in" style="margin-top:6px;">📌 <b>K投与３原則：</b>濃度≦40 mEq/L｜速度≦20 mEq/h｜1日量≦100 mEq</div>
+      <div class="notice rd" id="r-knotice" style="display:none;">⚠️ K高値のため補充不要または禁忌の可能性があります。</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ ΔNa ══ -->
+<div id="page-delta" class="page">
+<div class="scroll-page">
+  <div class="wcard">
+    <div class="ct pu">📐 ΔNa値（Adrogue-Medias式）</div>
+    <div class="cb">
+      <div class="notice bl" style="margin-bottom:10px;">ℹ️ 輸液1L投与時の予測Na濃度変化（mEq/L）を計算します</div>
+      <div class="dinputs">
+        <div class="iw"><label>輸液中 Na</label><div class="ir"><input type="number" id="fluid-na" value="154" step="1" min="0"><span class="u">mEq/L</span></div></div>
+        <div class="iw"><label>輸液中 K</label><div class="ir"><input type="number" id="fluid-k" value="0" step="1" min="0"><span class="u">mEq/L</span></div></div>
+      </div>
+      <div class="rc pu" style="margin-bottom:8px;">
+        <div class="rl">輸液1L投与時の予測Na変化</div>
+        <div class="rv pu" id="r-dna" style="font-size:1.4rem;">—<span class="ru">mEq/L</span></div>
+        <div class="rs" id="r-dnaf" style="margin-top:4px;"></div>
+      </div>
+      <div class="rc gy">
+        <div class="rrow"><span class="rrow-l">TBW（体液総量）</span><span class="rrow-v gy" id="r-tbw">—</span></div>
+        <div class="rs" id="r-tbws"></div>
+      </div>
+      <div class="notice am" style="margin-top:8px;">⚠️ 1時間あたりNa上昇0.5 mEq/L以下、1日10〜12 mEq/L以下を目標（橋中心髄鞘崩壊症の予防）</div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div><!-- /content -->
 </div><!-- /app -->
 
 <script>
-  function showPage(name, btn) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tabbar button').forEach(b => b.classList.remove('active'));
-    document.getElementById('page-' + name).classList.add('active');
-    btn.classList.add('active');
-  }
+function showPage(n,b){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+n).classList.add('active');
+  b.classList.add('active');
+}
 
-  const watchIds = ['weight','na','k','hct','urine','af','sf','protein-factor','fat-factor','fluid-na','fluid-k'];
-  watchIds.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('input', () => { syncBadges(); calculate(); });
-  });
-  document.querySelectorAll('input[name="gender"]').forEach(el => el.addEventListener('change', calculate));
+['weight','na','k','hct','urine','af','sf','protein-factor','fat-factor','fluid-na','fluid-k'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) el.addEventListener('input',()=>{syncBadges();calc();});
+});
+document.querySelectorAll('input[name="gender"]').forEach(el=>el.addEventListener('change',calc));
 
-  function syncBadges() {
-    document.getElementById('af-val').textContent = parseFloat(document.getElementById('af').value).toFixed(1);
-    document.getElementById('sf-val').textContent = parseFloat(document.getElementById('sf').value).toFixed(2);
-    document.getElementById('protein-val').textContent = parseFloat(document.getElementById('protein-factor').value).toFixed(1) + ' g/kg';
-    document.getElementById('fat-val').textContent = document.getElementById('fat-factor').value + '%';
-  }
+function syncBadges(){
+  document.getElementById('af-val').textContent=parseFloat(document.getElementById('af').value).toFixed(1);
+  document.getElementById('sf-val').textContent=parseFloat(document.getElementById('sf').value).toFixed(2);
+  document.getElementById('protein-val').textContent=parseFloat(document.getElementById('protein-factor').value).toFixed(1)+' g/kg';
+  document.getElementById('fat-val').textContent=document.getElementById('fat-factor').value+'%';
+}
 
-  function fmt(val, d=1) {
-    if (val == null || isNaN(val)) return '—';
-    return parseFloat(val.toFixed(d)).toLocaleString('ja-JP');
-  }
+function f(v,d=1){if(v==null||isNaN(v))return'—';return parseFloat(v.toFixed(d)).toLocaleString('ja-JP');}
 
-  let R = {};
+let R={};
 
-  function calculate() {
-    const isMale = document.getElementById('male').checked;
-    const tbwF = isMale ? 0.6 : 0.5;
-    const beeF = isMale ? 14.1 : 10.8;
-    const w = parseFloat(document.getElementById('weight').value) || 0;
-    const na = parseFloat(document.getElementById('na').value) || 0;
-    const k = parseFloat(document.getElementById('k').value) || 0;
-    const hct = parseFloat(document.getElementById('hct').value) || 0;
-    const urH = parseFloat(document.getElementById('urine').value) || 0;
-    const af = parseFloat(document.getElementById('af').value) || 1;
-    const sf = parseFloat(document.getElementById('sf').value) || 1;
-    const pF = parseFloat(document.getElementById('protein-factor').value) || 1;
-    const fatP = parseFloat(document.getElementById('fat-factor').value) || 30;
-    const fNa = parseFloat(document.getElementById('fluid-na').value) || 0;
-    const fK = parseFloat(document.getElementById('fluid-k').value) || 0;
+function calc(){
+  const isMale=document.getElementById('male').checked;
+  const tbwF=isMale?.6:.5, beeF=isMale?14.1:10.8;
+  const w=parseFloat(document.getElementById('weight').value)||0;
+  const na=parseFloat(document.getElementById('na').value)||0;
+  const k=parseFloat(document.getElementById('k').value)||0;
+  const hct=parseFloat(document.getElementById('hct').value)||0;
+  const urH=parseFloat(document.getElementById('urine').value)||0;
+  const af=parseFloat(document.getElementById('af').value)||1;
+  const sf=parseFloat(document.getElementById('sf').value)||1;
+  const pF=parseFloat(document.getElementById('protein-factor').value)||1;
+  const fatP=parseFloat(document.getElementById('fat-factor').value)||30;
+  const fNa=parseFloat(document.getElementById('fluid-na').value)||0;
+  const fK=parseFloat(document.getElementById('fluid-k').value)||0;
 
-    const water30 = w * 30;
-    const ur24 = urH * 24;
-    const ins = w * 15;
-    const waterUr = ur24 + ins;
-    const bee = beeF * w + 620;
-    const tee = bee * af * sf;
-    const pG = w * pF, pKcal = pG * 4;
-    const fatKcal = tee * (fatP / 100), fatG = fatKcal / 9;
-    const carbKcal = tee - pKcal - fatKcal;
-    const wdNa = w * tbwF * (na / 150 - 1) * 1000;
-    const wdHct = (1 - 45 / hct) * w * tbwF * 1000;
-    const naDef = w * tbwF * (140 - na);
-    const kH = (4 - k) * 100, kL = (4 - k) * 200;
-    const tbw = w * tbwF;
-    const dNa = (fNa + fK - na) / (tbw + 1);
+  const w30=w*30, ur24=urH*24, ins=w*15, wur=ur24+ins;
+  const bee=beeF*w+620, tee=bee*af*sf;
+  const pG=w*pF, pK=pG*4;
+  const fatK=tee*(fatP/100), fatG=fatK/9;
+  const carbK=tee-pK-fatK;
+  const wdNa=w*tbwF*(na/150-1)*1000;
+  const wdHct=(1-45/hct)*w*tbwF*1000;
+  const naDef=w*tbwF*(140-na);
+  const kH=(4-k)*100, kL=(4-k)*200;
+  const tbw=w*tbwF, dNa=(fNa+fK-na)/(tbw+1);
 
-    R = { isMale, tbwF, beeF, w, na, k, hct, urH, af, sf, pF, fatP, fNa, fK,
-          water30, ur24, ins, waterUr, bee, tee, pG, pKcal, fatG, fatKcal, carbKcal,
-          wdNa, wdHct, naDef, kH, kL, tbw, dNa };
-    render();
-  }
+  R={isMale,tbwF,beeF,w,na,k,hct,urH,af,sf,pF,fatP,fNa,fK,w30,ur24,ins,wur,bee,tee,pG,pK,fatG,fatK,carbK,wdNa,wdHct,naDef,kH,kL,tbw,dNa};
+  render();
+}
 
-  function render() {
-    const r = R;
-    // 水分
-    document.getElementById('r-water30').innerHTML = fmt(r.water30,0) + '<span class="res-unit">ml/日</span>';
-    document.getElementById('r-water30-sub').textContent = r.w + ' kg × 30 ml';
-    document.getElementById('r-water-urine').innerHTML = fmt(r.waterUr,1) + '<span class="res-unit">ml/日</span>';
-    document.getElementById('r-water-urine-sub').textContent = `尿${fmt(r.ur24,0)}+不感${fmt(r.ins,1)}`;
-    // TEE/BEE
-    document.getElementById('r-tee').innerHTML = fmt(r.tee,0) + '<span style="font-size:0.8rem;font-weight:400;"> kcal/日</span>';
-    document.getElementById('r-tee-sub').textContent = `${fmt(r.bee,1)} × ${r.af.toFixed(1)} × ${r.sf.toFixed(2)}`;
-    document.getElementById('r-bee-label').textContent = `BEE（${r.isMale?'男性':'女性'}式）`;
-    document.getElementById('r-bee').textContent = fmt(r.bee,2) + ' kcal';
-    document.getElementById('r-bee-formula').textContent = `${r.beeF} × ${r.w} kg + 620`;
-    // 栄養素
-    document.getElementById('r-protein-g').innerHTML = fmt(r.pG,1) + '<span class="res-unit">g</span>';
-    document.getElementById('r-protein-sub').textContent = fmt(r.pKcal,1) + ' kcal';
-    document.getElementById('r-fat-label').textContent = `脂質（${r.fatP}%）`;
-    document.getElementById('r-fat-g').innerHTML = fmt(r.fatG,1) + '<span class="res-unit">g</span>';
-    document.getElementById('r-fat-sub').textContent = fmt(r.fatKcal,1) + ' kcal';
-    document.getElementById('r-carb').innerHTML = fmt(r.carbKcal,1) + '<span class="res-unit">kcal</span>';
-    document.getElementById('r-carb-sub').textContent = `蛋白${fmt(r.pKcal,0)}+脂質${fmt(r.fatKcal,0)}+糖質${fmt(r.carbKcal,0)}=TEE${fmt(r.tee,0)}`;
-    // 欠乏量
-    const naOk = r.na>=135&&r.na<=145;
-    document.getElementById('r-na-card').className = 'res-card '+(naOk?'gray':r.na<135?'danger':'amber');
-    document.getElementById('r-na-val').className = 'res-val '+(naOk?'gray':r.na<135?'danger':'amber');
-    document.getElementById('r-na-val').innerHTML = fmt(r.na,1)+'<span class="res-unit">mEq/L</span>';
-    document.getElementById('r-na-badge').innerHTML = naOk?'<span class="badge b-ok">正常</span>':r.na<135?'<span class="badge b-danger">低値</span>':'<span class="badge b-warn">高値</span>';
-    const kOk = r.k>=3.5&&r.k<=5.0;
-    document.getElementById('r-k-card').className = 'res-card '+(kOk?'gray':r.k<3.5?'danger':'amber');
-    document.getElementById('r-k-val').className = 'res-val '+(kOk?'gray':r.k<3.5?'danger':'amber');
-    document.getElementById('r-k-val').innerHTML = fmt(r.k,1)+'<span class="res-unit">mEq/L</span>';
-    document.getElementById('r-k-badge').innerHTML = kOk?'<span class="badge b-ok">正常</span>':r.k<3.5?'<span class="badge b-danger">低値</span>':'<span class="badge b-warn">高値</span>';
-    // 水分欠乏量
-    document.getElementById('r-water-hina').textContent = fmt(r.wdNa,1)+' ml';
-    document.getElementById('r-water-hina').style.color = r.wdNa<0?'var(--gray-300)':'var(--primary)';
-    document.getElementById('r-water-hina-badge').innerHTML = r.wdNa<0?'<span class="badge b-danger">使用不可</span>':'';
-    document.getElementById('r-water-hina-formula').textContent = `${r.w}×${r.tbwF}×(${r.na}/150−1)×1000`;
-    document.getElementById('r-water-hct').textContent = fmt(r.wdHct,1)+' ml';
-    document.getElementById('r-water-hct').style.color = r.wdHct<0?'var(--gray-300)':'var(--accent)';
-    document.getElementById('r-water-hct-badge').innerHTML = r.wdHct<0?'<span class="badge b-danger">使用不可</span>':'';
-    document.getElementById('r-water-hct-formula').textContent = `(1−45/${r.hct}%)×${r.w}×${r.tbwF}×1000`;
-    document.getElementById('r-water-notice').style.display = (r.wdNa<0||r.wdHct<0)?'block':'none';
-    document.getElementById('r-na-def-card').className = 'res-card wide '+(r.naDef>0?'amber':'gray');
-    document.getElementById('r-na-def-label').textContent = r.naDef>0?'Na欠乏量（補充推奨）':'Na（過剰の可能性）';
-    document.getElementById('r-na-def').textContent = fmt(r.naDef,1)+' mEq';
-    document.getElementById('r-na-def').style.color = r.naDef>0?'var(--warn)':'var(--gray-600)';
-    document.getElementById('r-na-def-formula').textContent = `${r.w}×${r.tbwF}×(140−${r.na})`;
-    document.getElementById('r-k-high-card').className = 'res-card '+(r.kH<0?'danger':'amber');
-    document.getElementById('r-k-high').className = 'res-val '+(r.kH<0?'danger':'amber');
-    document.getElementById('r-k-high').innerHTML = fmt(r.kH,0)+'<span class="res-unit">mEq</span>';
-    document.getElementById('r-k-low-card').className = 'res-card '+(r.kL<0?'danger':'amber');
-    document.getElementById('r-k-low').className = 'res-val '+(r.kL<0?'danger':'amber');
-    document.getElementById('r-k-low').innerHTML = fmt(r.kL,0)+'<span class="res-unit">mEq</span>';
-    document.getElementById('r-k-notice').style.display = (r.kH<0||r.kL<0)?'block':'none';
-    // ΔNa
-    document.getElementById('r-delta-na').innerHTML = fmt(r.dNa,3)+'<span class="res-unit">mEq/L</span>';
-    document.getElementById('r-delta-formula').textContent = `(輸液Na${r.fNa}+輸液K${r.fK}−血清Na${r.na})÷(TBW${fmt(r.tbw,2)}+1)`;
-    document.getElementById('r-tbw').textContent = fmt(r.tbw,2)+' L';
-    document.getElementById('r-tbw-sub').textContent = `${r.w}kg × ${r.tbwF}（${r.isMale?'男性':'女性'}）`;
-  }
+function render(){
+  const r=R;
+  document.getElementById('r-w30').innerHTML=f(r.w30,0)+'<span class="ru">ml/日</span>';
+  document.getElementById('r-w30s').textContent=r.w+' kg × 30 ml';
+  document.getElementById('r-wur').innerHTML=f(r.wur,1)+'<span class="ru">ml/日</span>';
+  document.getElementById('r-wurs').textContent='尿量'+f(r.ur24,0)+'＋不感蒸泄'+f(r.ins,1);
+  document.getElementById('r-tee').innerHTML=f(r.tee,0)+'<span style="font-size:.8rem;font-weight:400"> kcal/日</span>';
+  document.getElementById('r-tees').textContent=f(r.bee,1)+' × '+r.af.toFixed(1)+' × '+r.sf.toFixed(2);
+  document.getElementById('r-bee-l').textContent='BEE（'+(r.isMale?'男性':'女性')+'式）';
+  document.getElementById('r-bee').textContent=f(r.bee,2)+' kcal';
+  document.getElementById('r-beef').textContent=r.beeF+' × '+r.w+' kg + 620';
+  document.getElementById('r-pg').innerHTML=f(r.pG,1)+'<span class="ru">g</span>';
+  document.getElementById('r-ps').textContent=f(r.pK,1)+' kcal ('+r.pF.toFixed(1)+' g/kg)';
+  document.getElementById('r-fl').textContent='脂質（'+r.fatP+'%）';
+  document.getElementById('r-fg').innerHTML=f(r.fatG,1)+'<span class="ru">g</span>';
+  document.getElementById('r-fs').textContent=f(r.fatK,1)+' kcal';
+  document.getElementById('r-carb').innerHTML=f(r.carbK,1)+'<span class="ru">kcal</span>';
+  document.getElementById('r-carbs').textContent='蛋白'+f(r.pK,0)+'+脂質'+f(r.fatK,0)+'+糖質'+f(r.carbK,0)+'=TEE'+f(r.tee,0);
+  const naOk=r.na>=135&&r.na<=145;
+  document.getElementById('r-na-card').className='rc '+(naOk?'gy':r.na<135?'dn':'am');
+  document.getElementById('r-na-val').className='rv '+(naOk?'gy':r.na<135?'dn':'am');
+  document.getElementById('r-na-val').innerHTML=f(r.na,1)+'<span class="ru">mEq/L</span>';
+  document.getElementById('r-na-badge').innerHTML=naOk?'<span class="badge bo">正常</span>':r.na<135?'<span class="badge bd">低値</span>':'<span class="badge bw">高値</span>';
+  const kOk=r.k>=3.5&&r.k<=5.0;
+  document.getElementById('r-k-card').className='rc '+(kOk?'gy':r.k<3.5?'dn':'am');
+  document.getElementById('r-k-val').className='rv '+(kOk?'gy':r.k<3.5?'dn':'am');
+  document.getElementById('r-k-val').innerHTML=f(r.k,1)+'<span class="ru">mEq/L</span>';
+  document.getElementById('r-k-badge').innerHTML=kOk?'<span class="badge bo">正常</span>':r.k<3.5?'<span class="badge bd">低値</span>':'<span class="badge bw">高値</span>';
+  document.getElementById('r-whina').textContent=f(r.wdNa,1)+' ml';
+  document.getElementById('r-whina').style.color=r.wdNa<0?'var(--g300)':'var(--primary)';
+  document.getElementById('r-whina-b').innerHTML=r.wdNa<0?'<span class="badge bd">使用不可</span>':'';
+  document.getElementById('r-whinas').textContent=r.w+'×'+r.tbwF+'×('+r.na+'/150−1)×1000';
+  document.getElementById('r-whct').textContent=f(r.wdHct,1)+' ml';
+  document.getElementById('r-whct').style.color=r.wdHct<0?'var(--g300)':'var(--accent)';
+  document.getElementById('r-whct-b').innerHTML=r.wdHct<0?'<span class="badge bd">使用不可</span>':'';
+  document.getElementById('r-whcts').textContent='(1−45/'+r.hct+'%)×'+r.w+'×'+r.tbwF+'×1000';
+  document.getElementById('r-wnotice').style.display=(r.wdNa<0||r.wdHct<0)?'block':'none';
+  document.getElementById('r-nadef-card').className='rc '+(r.naDef>0?'am':'gy');
+  document.getElementById('r-nadef-l').textContent=r.naDef>0?'Na欠乏量（補充推奨）':'Na（過剰の可能性）';
+  document.getElementById('r-nadef').textContent=f(r.naDef,1)+' mEq';
+  document.getElementById('r-nadef').style.color=r.naDef>0?'var(--warn)':'var(--g600)';
+  document.getElementById('r-nadefs').textContent=r.w+'×'+r.tbwF+'×(140−'+r.na+')';
+  document.getElementById('r-kh-card').className='rc '+(r.kH<0?'dn':'am');
+  document.getElementById('r-kh').className='rv '+(r.kH<0?'dn':'am');
+  document.getElementById('r-kh').innerHTML=f(r.kH,0)+'<span class="ru">mEq</span>';
+  document.getElementById('r-kl-card').className='rc '+(r.kL<0?'dn':'am');
+  document.getElementById('r-kl').className='rv '+(r.kL<0?'dn':'am');
+  document.getElementById('r-kl').innerHTML=f(r.kL,0)+'<span class="ru">mEq</span>';
+  document.getElementById('r-knotice').style.display=(r.kH<0||r.kL<0)?'block':'none';
+  document.getElementById('r-dna').innerHTML=f(r.dNa,3)+'<span class="ru">mEq/L</span>';
+  document.getElementById('r-dnaf').textContent='(輸液Na'+r.fNa+'+輸液K'+r.fK+'−血清Na'+r.na+')÷(TBW'+f(r.tbw,2)+'+1)';
+  document.getElementById('r-tbw').textContent=f(r.tbw,2)+' L';
+  document.getElementById('r-tbws').textContent=r.w+'kg × '+r.tbwF+'（'+(r.isMale?'男性':'女性')+'）';
+}
 
-  function copyResults() {
-    const r = R;
-    if (!r.w) return;
-    const t = `【水分・栄養必要量 計算結果】
+function copyResults(){
+  const r=R; if(!r.w)return;
+  const t=`【水分・栄養必要量 計算結果】
 体重${r.w}kg／${r.isMale?'男性':'女性'}／Na${r.na}／K${r.k}／Hct${r.hct}%
 
 ■ 水分必要量
-  30ml/kg法：${fmt(r.water30,0)} ml/日
-  尿量+不感蒸泄法：${fmt(r.waterUr,1)} ml/日
+  30ml/kg法：${f(r.w30,0)} ml/日
+  尿量+不感蒸泄法：${f(r.wur,1)} ml/日
 
 ■ エネルギー
-  BEE：${fmt(r.bee,1)} kcal
-  TEE（AF${r.af.toFixed(1)}×SF${r.sf.toFixed(2)}）：${fmt(r.tee,0)} kcal/日
-  蛋白質：${fmt(r.pG,1)}g（${fmt(r.pKcal,1)}kcal）
-  脂質（${r.fatP}%）：${fmt(r.fatG,1)}g（${fmt(r.fatKcal,1)}kcal）
-  糖質：${fmt(r.carbKcal,1)}kcal
+  BEE：${f(r.bee,1)} kcal
+  TEE（AF${r.af.toFixed(1)}×SF${r.sf.toFixed(2)}）：${f(r.tee,0)} kcal/日
+  蛋白質：${f(r.pG,1)}g（${f(r.pK,1)}kcal）
+  脂質（${r.fatP}%）：${f(r.fatG,1)}g（${f(r.fatK,1)}kcal）
+  糖質：${f(r.carbK,1)}kcal
 
 ■ 欠乏量
-  水分欠乏（高Na法）：${fmt(r.wdNa,1)}ml
-  水分欠乏（Hct法）：${fmt(r.wdHct,1)}ml
-  Na欠乏量：${fmt(r.naDef,1)}mEq
-  K欠乏量（K>3時）：${fmt(r.kH,0)}mEq`;
-    navigator.clipboard.writeText(t).then(() => {
-      const el = document.getElementById('copy-toast');
-      el.classList.add('show');
-      setTimeout(() => el.classList.remove('show'), 2000);
-    });
-  }
+  水分欠乏（高Na法）：${f(r.wdNa,1)}ml
+  水分欠乏（Hct法）：${f(r.wdHct,1)}ml
+  Na欠乏量：${f(r.naDef,1)}mEq
+  K欠乏量（K>3時）：${f(r.kH,0)}mEq`;
+  navigator.clipboard.writeText(t).then(()=>{
+    const el=document.getElementById('cpt');
+    el.classList.add('show');
+    setTimeout(()=>el.classList.remove('show'),2000);
+  });
+}
 
-  calculate();
+calc();
 </script>
 </body>
 </html>
