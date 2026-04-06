@@ -21,39 +21,28 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;font-family:-apple-system,'Helvetica Neue',Arial,'Hiragino Kaku Gothic ProN',sans-serif;background:#e8eef4;color:var(--g800);}
 
-/* ── アプリ全体 ── */
 .app{display:flex;flex-direction:column;height:100dvh;padding-top:env(safe-area-inset-top,0);}
 
-/* ヘッダー */
 .hd{background:linear-gradient(135deg,#1a6fa8,#0d5a8a);color:white;padding:7px 12px;display:flex;align-items:center;gap:8px;flex-shrink:0;}
 .hd h1{font-size:.88rem;font-weight:700;}
 .hd p{font-size:.62rem;opacity:.8;}
 
-/* タブバー */
 .tabs{display:flex;background:white;border-bottom:1px solid var(--g200);flex-shrink:0;}
 .tabs button{flex:1;padding:8px 4px;border:none;background:transparent;font-size:.72rem;font-weight:600;color:var(--g600);cursor:pointer;border-bottom:2px solid transparent;font-family:inherit;transition:all .15s;}
 .tabs button.active{color:var(--primary);border-bottom-color:var(--primary);}
 
-/* コンテンツ */
 .content{flex:1;min-height:0;}
 .page{display:none;height:100%;}
 .page.active{display:flex;flex-direction:column;}
 
-/* ══ メイン画面：左右2列 ══ */
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:6px;height:100%;min-height:0;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:6px;height:100%;min-height:0;align-items:start;}
 
-/* 左列：スクロール可 */
-.lcol{display:flex;flex-direction:column;gap:5px;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.lcol{display:flex;flex-direction:column;gap:5px;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;max-height:100%;}
 .lcol::-webkit-scrollbar{display:none;}
 
-/* 右列：左列と同じ高さ・内部で均等配置 */
-.rcol{display:flex;flex-direction:column;gap:5px;overflow:hidden;}
-.rcol .card-water{flex-shrink:0;}
-.rcol .card-energy{flex:1;display:flex;flex-direction:column;min-height:0;}
-.rcol .card-energy .cb{flex:1;display:flex;flex-direction:column;justify-content:space-between;min-height:0;padding:7px 8px;}
+.rcol{display:flex;flex-direction:column;gap:5px;}
 
-/* カード共通 */
-.card{background:white;border-radius:8px;box-shadow:0 1px 2px rgba(0,0,0,.07);overflow:hidden;flex-shrink:0;}
+.card{background:white;border-radius:8px;box-shadow:0 1px 2px rgba(0,0,0,.07);overflow:hidden;}
 .ct{font-size:.67rem;font-weight:700;padding:5px 8px;display:flex;align-items:center;gap:4px;}
 .ct.bl{background:var(--pl);color:var(--primary);border-bottom:1.5px solid var(--primary);}
 .ct.tl{background:var(--al);color:var(--accent);border-bottom:1.5px solid var(--accent);}
@@ -61,13 +50,11 @@ html,body{height:100%;font-family:-apple-system,'Helvetica Neue',Arial,'Hiragino
 .ct.pu{background:var(--prl);color:var(--purple);border-bottom:1.5px solid var(--purple);}
 .cb{padding:6px 8px;}
 
-/* 性別トグル */
 .gender{display:flex;border-radius:6px;overflow:hidden;border:1.5px solid var(--g200);margin-bottom:5px;}
 .gender input{display:none;}
 .gender label{flex:1;text-align:center;padding:7px;cursor:pointer;font-size:.8rem;font-weight:600;color:var(--g600);transition:all .15s;}
 .gender input:checked+label{background:var(--primary);color:white;}
 
-/* 入力フィールド */
 .ilist{display:flex;flex-direction:column;gap:4px;margin-bottom:5px;}
 .iw label{display:block;font-size:.6rem;font-weight:600;color:var(--g600);margin-bottom:2px;}
 .ir{display:flex;align-items:center;gap:2px;background:var(--g50);border:1.5px solid var(--g200);border-radius:5px;padding:5px 6px;}
@@ -75,7 +62,6 @@ html,body{height:100%;font-family:-apple-system,'Helvetica Neue',Arial,'Hiragino
 .ir input:focus{outline:none;}
 .ir .u{font-size:.58rem;color:var(--g600);white-space:nowrap;}
 
-/* スライダー */
 .sw{margin-bottom:5px;}
 .sw:last-child{margin-bottom:0;}
 .sh2{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;}
@@ -88,13 +74,11 @@ input[type=range]{width:100%;accent-color:var(--primary);cursor:pointer;height:3
 .hi:last-child{text-align:right;}
 .hi.w{color:var(--danger);font-weight:600;}
 
-/* TEEボックス */
-.tee{background:linear-gradient(135deg,var(--pl),#d0e8ff);border:1.5px solid var(--primary);border-radius:7px;padding:8px;text-align:center;}
+.tee{background:linear-gradient(135deg,var(--pl),#d0e8ff);border:1.5px solid var(--primary);border-radius:7px;padding:8px;text-align:center;margin-bottom:6px;}
 .tee-l{font-size:.58rem;color:var(--primary);font-weight:700;}
 .tee-v{font-size:1.75rem;font-weight:800;color:var(--primary);line-height:1.2;}
 .tee-s{font-size:.58rem;color:var(--g600);margin-top:1px;}
 
-/* 結果グリッド */
 .rg{display:grid;grid-template-columns:1fr 1fr;gap:4px;}
 .rg.wide .rc:last-child{grid-column:1/-1;}
 .rc{border-radius:6px;padding:6px 8px;}
@@ -115,16 +99,13 @@ input[type=range]{width:100%;accent-color:var(--primary);cursor:pointer;height:3
 .ru{font-size:.6rem;font-weight:400;}
 .rs{font-size:.58rem;color:var(--g600);margin-top:1px;line-height:1.3;}
 
-/* BEE行 */
 .bee-row{display:flex;justify-content:space-between;align-items:center;font-size:.72rem;padding:4px 0;}
 .bee-sub{font-size:.58rem;color:var(--g600);}
 
-/* コピーボタン */
-.cpbtn{width:100%;padding:7px;background:var(--accent);color:white;border:none;border-radius:6px;font-size:.75rem;font-weight:700;cursor:pointer;font-family:inherit;}
+.cpbtn{width:100%;padding:7px;background:var(--accent);color:white;border:none;border-radius:6px;font-size:.75rem;font-weight:700;cursor:pointer;font-family:inherit;margin-top:6px;}
 .cptoast{text-align:center;font-size:.65rem;color:var(--accent);font-weight:600;opacity:0;transition:opacity .3s;margin-top:2px;}
 .cptoast.show{opacity:1;}
 
-/* ══ 欠乏量・ΔNaページ ══ */
 .scroll-page{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:6px;display:flex;flex-direction:column;gap:6px;}
 .wcard{background:white;border-radius:8px;box-shadow:0 1px 2px rgba(0,0,0,.07);overflow:hidden;}
 .wcard .ct{padding:8px 12px;}
@@ -162,11 +143,9 @@ input[type=range]{width:100%;accent-color:var(--primary);cursor:pointer;height:3
 
 <div class="content">
 
-<!-- ══ メイン ══ -->
 <div id="page-main" class="page active">
 <div class="grid2">
 
-  <!-- 左列 -->
   <div class="lcol">
     <div class="card">
       <div class="ct bl">👤 患者情報</div>
@@ -232,12 +211,10 @@ input[type=range]{width:100%;accent-color:var(--primary);cursor:pointer;height:3
         </div>
       </div>
     </div>
-  </div><!-- /lcol -->
+  </div>
 
-  <!-- 右列 -->
   <div class="rcol">
-
-    <div class="card card-water">
+    <div class="card">
       <div class="ct bl">💧 水分必要量</div>
       <div class="cb">
         <div class="rg">
@@ -255,7 +232,7 @@ input[type=range]{width:100%;accent-color:var(--primary);cursor:pointer;height:3
       </div>
     </div>
 
-    <div class="card card-energy">
+    <div class="card">
       <div class="ct tl">⚡ 必要エネルギー量</div>
       <div class="cb">
         <div class="tee">
@@ -263,7 +240,7 @@ input[type=range]{width:100%;accent-color:var(--primary);cursor:pointer;height:3
           <div class="tee-v" id="r-tee">—<span style="font-size:.8rem;font-weight:400"> kcal/日</span></div>
           <div class="tee-s" id="r-tees"></div>
         </div>
-        <div class="rc bl" style="margin-top:0;">
+        <div class="rc bl" style="margin-bottom:5px;">
           <div class="bee-row">
             <span id="r-bee-l" style="font-size:.68rem;color:var(--g700);">BEE</span>
             <span id="r-bee" style="font-weight:700;color:var(--primary);font-size:.85rem;">—</span>
@@ -291,12 +268,11 @@ input[type=range]{width:100%;accent-color:var(--primary);cursor:pointer;height:3
         <div class="cptoast" id="cpt">コピーしました！</div>
       </div>
     </div>
+  </div>
 
-  </div><!-- /rcol -->
 </div>
-</div><!-- /page-main -->
+</div>
 
-<!-- ══ 欠乏量 ══ -->
 <div id="page-deficit" class="page">
 <div class="scroll-page">
   <div class="wcard">
@@ -350,7 +326,6 @@ input[type=range]{width:100%;accent-color:var(--primary);cursor:pointer;height:3
 </div>
 </div>
 
-<!-- ══ ΔNa ══ -->
 <div id="page-delta" class="page">
 <div class="scroll-page">
   <div class="wcard">
@@ -376,8 +351,8 @@ input[type=range]{width:100%;accent-color:var(--primary);cursor:pointer;height:3
 </div>
 </div>
 
-</div><!-- /content -->
-</div><!-- /app -->
+</div>
+</div>
 
 <script>
 function showPage(n,b){
