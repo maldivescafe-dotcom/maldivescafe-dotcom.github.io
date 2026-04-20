@@ -59,7 +59,7 @@
     top: 0;
     z-index: 100;
     background: #f0f4f8;
-    padding-bottom: 12px;
+    padding-bottom: 10px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     margin-bottom: 0;
   }
@@ -71,8 +71,26 @@
     align-items: start;
   }
 
+  /* モバイル（~900px）: 2カラム並列を維持してパネルをコンパクトに */
   @media (max-width: 900px) {
-    .top-grid { grid-template-columns: 1fr; }
+    body { padding: 8px; }
+    header { padding: 10px 14px; margin-bottom: 8px; }
+    header .icon { font-size: 1.2rem; }
+    header h1 { font-size: 0.95rem; }
+    header p { display: none; }
+    .top-panel { padding-bottom: 8px; }
+    .top-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .card-header { padding: 10px 12px; font-size: 0.82rem; }
+    .card-body { padding: 10px 12px; }
+    .field-group { margin-bottom: 8px; }
+    .field-group label { font-size: 0.72rem; margin-bottom: 3px; }
+    .field-row input, .field-row select { padding: 7px 8px; font-size: 0.9rem; }
+    .field-row .unit { font-size: 0.72rem; min-width: 36px; }
+    .gender-toggle label { padding: 7px 4px; font-size: 0.82rem; }
+    .slider-hint { display: none; }
+    .slider-value { min-width: 32px; font-size: 0.9rem; padding: 2px 4px; }
+    .calc-btn { padding: 10px; font-size: 0.9rem; }
+    .reset-btn { padding: 7px; font-size: 0.78rem; }
     .tab-btn { font-size: 0.78rem; padding: 11px 6px; }
   }
   @media (max-width: 480px) {
