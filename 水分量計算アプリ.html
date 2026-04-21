@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>水分量・必要量・欠乏量 計算アプリ</title>
-<!-- iPhone ホーム画面アプリ化設定 -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="水分量計算">
@@ -61,7 +60,6 @@
     background: #f0f4f8;
     padding-bottom: 10px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    margin-bottom: 0;
   }
 
   .top-grid {
@@ -71,52 +69,7 @@
     align-items: start;
   }
 
-  /* モバイル（~900px）: 2カラム並列を維持してパネルをコンパクトに */
-  @media (max-width: 900px) {
-    body { padding: 8px; }
-    header { padding: 10px 14px; margin-bottom: 8px; }
-    header .icon { font-size: 1.2rem; }
-    header h1 { font-size: 0.95rem; }
-    header p { display: none; }
-    .top-panel { padding-bottom: 8px; }
-    .top-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-    .card-header { padding: 8px 12px; font-size: 0.82rem; }
-    .card-body { padding: 8px 10px; }
-    .field-group { margin-bottom: 6px; }
-    .field-group label { font-size: 0.7rem; margin-bottom: 2px; }
-    .field-row input, .field-row select { padding: 5px 7px; font-size: 0.88rem; }
-    .field-row .unit { font-size: 0.7rem; min-width: 32px; }
-    .gender-toggle label { padding: 6px 4px; font-size: 0.8rem; }
-    .slider-hint { display: none; }
-    .slider-value { min-width: 32px; font-size: 0.88rem; padding: 2px 4px; }
-    .calc-btn { padding: 9px; font-size: 0.88rem; margin-top: 4px; }
-    .reset-btn { padding: 6px; font-size: 0.76rem; margin-top: 5px; }
-    .tab-btn { font-size: 0.78rem; padding: 11px 6px; }
-
-    /* 患者情報フィールドを2カラムグリッドに変更して高さを2/3に圧縮 */
-    .top-grid > .card:first-child .card-body {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 5px 8px;
-    }
-    /* 性別トグルは2カラム全幅 */
-    .top-grid > .card:first-child .card-body .field-group:first-child {
-      grid-column: 1 / -1;
-    }
-    /* グリッド内のfield-groupはmargin不要 */
-    .top-grid > .card:first-child .card-body .field-group {
-      margin-bottom: 0;
-    }
-  }
-  @media (max-width: 480px) {
-    .tab-btn { font-size: 0.72rem; padding: 10px 4px; }
-  }
-
   /* ===== TAB CONTAINER ===== */
-  .tab-container {
-    margin-top: 0;
-  }
-
   .tab-bar {
     display: flex;
     border-bottom: 2px solid var(--gray-200);
@@ -162,9 +115,9 @@
     align-items: center;
     gap: 8px;
   }
-  .card-header.blue { background: var(--primary-light); color: var(--primary); border-bottom: 2px solid var(--primary); }
-  .card-header.teal { background: var(--accent-light); color: var(--accent); border-bottom: 2px solid var(--accent); }
-  .card-header.amber { background: var(--warn-light); color: var(--warn); border-bottom: 2px solid var(--warn); }
+  .card-header.blue  { background: var(--primary-light); color: var(--primary); border-bottom: 2px solid var(--primary); }
+  .card-header.teal  { background: var(--accent-light);  color: var(--accent);  border-bottom: 2px solid var(--accent); }
+  .card-header.amber { background: var(--warn-light);    color: var(--warn);    border-bottom: 2px solid var(--warn); }
   .card-body { padding: 18px; }
 
   .field-group { margin-bottom: 14px; }
@@ -175,11 +128,7 @@
     color: var(--gray-600);
     margin-bottom: 5px;
   }
-  .field-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
+  .field-row { display: flex; align-items: center; gap: 8px; }
   .field-row input, .field-row select {
     flex: 1;
     padding: 9px 12px;
@@ -204,7 +153,6 @@
 
   .gender-toggle {
     display: flex;
-    gap: 0;
     border-radius: 7px;
     overflow: hidden;
     border: 1.5px solid var(--gray-200);
@@ -223,39 +171,7 @@
   .gender-toggle input:checked + label { background: var(--primary); color: white; }
   .gender-toggle label:hover { background: var(--primary-light); }
 
-  .calc-btn {
-    width: 100%;
-    padding: 13px;
-    background: linear-gradient(135deg, var(--primary), #0d5a8a);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    margin-top: 6px;
-    transition: opacity 0.2s, transform 0.1s;
-    letter-spacing: 0.05em;
-  }
-  .calc-btn:hover { opacity: 0.9; transform: translateY(-1px); }
-  .calc-btn:active { transform: translateY(0); }
-
-  .reset-btn {
-    width: 100%;
-    padding: 9px;
-    background: var(--gray-100);
-    color: var(--gray-600);
-    border: 1.5px solid var(--gray-200);
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 8px;
-    transition: background 0.2s;
-  }
-  .reset-btn:hover { background: var(--gray-200); }
-
-  /* Factor sliders */
+  /* Sliders */
   .slider-row { display: flex; align-items: center; gap: 10px; }
   .slider-row input[type=range] { flex: 1; accent-color: var(--primary); cursor: pointer; }
   .slider-value {
@@ -268,7 +184,7 @@
     padding: 3px 6px;
     border-radius: 5px;
   }
-  .slider-hint { font-size: 0.72rem; color: var(--gray-600); margin-top: 3px; }
+  .slider-hint { font-size: 0.72rem; color: var(--gray-600); margin-top: 3px; line-height: 1.5; }
 
   /* Results */
   .result-section { margin-bottom: 16px; }
@@ -284,38 +200,37 @@
   }
 
   .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  @media (max-width: 600px) { .result-grid { grid-template-columns: 1fr; } }
 
   .result-card {
     border-radius: 8px;
     padding: 12px 14px;
     position: relative;
   }
-  .result-card.blue { background: var(--primary-light); border-left: 4px solid var(--primary); }
-  .result-card.teal { background: var(--accent-light); border-left: 4px solid var(--accent); }
-  .result-card.amber { background: var(--warn-light); border-left: 4px solid var(--warn); }
-  .result-card.danger { background: var(--danger-light); border-left: 4px solid var(--danger); }
-  .result-card.gray { background: var(--gray-50); border-left: 4px solid var(--gray-300); }
+  .result-card.blue   { background: var(--primary-light); border-left: 4px solid var(--primary); }
+  .result-card.teal   { background: var(--accent-light);  border-left: 4px solid var(--accent); }
+  .result-card.amber  { background: var(--warn-light);    border-left: 4px solid var(--warn); }
+  .result-card.danger { background: var(--danger-light);  border-left: 4px solid var(--danger); }
+  .result-card.gray   { background: var(--gray-50);       border-left: 4px solid var(--gray-300); }
 
   .result-label { font-size: 0.75rem; color: var(--gray-600); margin-bottom: 3px; }
   .result-value { font-size: 1.4rem; font-weight: 700; }
-  .result-value.blue { color: var(--primary); }
-  .result-value.teal { color: var(--accent); }
-  .result-value.amber { color: var(--warn); }
+  .result-value.blue   { color: var(--primary); }
+  .result-value.teal   { color: var(--accent); }
+  .result-value.amber  { color: var(--warn); }
   .result-value.danger { color: var(--danger); }
-  .result-value.gray { color: var(--gray-600); }
+  .result-value.gray   { color: var(--gray-600); }
   .result-unit { font-size: 0.78rem; font-weight: 400; margin-left: 2px; }
-  .result-sub { font-size: 0.72rem; color: var(--gray-600); margin-top: 2px; }
+  .result-sub  { font-size: 0.72rem; color: var(--gray-600); margin-top: 2px; }
 
   .result-card-wide {
     border-radius: 8px;
     padding: 12px 14px;
     margin-bottom: 10px;
   }
-  .result-card-wide.blue { background: var(--primary-light); border-left: 4px solid var(--primary); }
-  .result-card-wide.teal { background: var(--accent-light); border-left: 4px solid var(--accent); }
-  .result-card-wide.amber { background: var(--warn-light); border-left: 4px solid var(--warn); }
-  .result-card-wide.gray { background: var(--gray-50); border-left: 4px solid var(--gray-300); }
+  .result-card-wide.blue  { background: var(--primary-light); border-left: 4px solid var(--primary); }
+  .result-card-wide.teal  { background: var(--accent-light);  border-left: 4px solid var(--accent); }
+  .result-card-wide.amber { background: var(--warn-light);    border-left: 4px solid var(--warn); }
+  .result-card-wide.gray  { background: var(--gray-50);       border-left: 4px solid var(--gray-300); }
 
   .formula-row {
     display: flex;
@@ -326,20 +241,13 @@
     font-size: 0.85rem;
   }
   .formula-row:last-child { border-bottom: none; }
-  .formula-label { color: var(--gray-700); }
+  .formula-label  { color: var(--gray-700); }
   .formula-result { font-weight: 700; font-size: 0.95rem; }
 
-  .badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 99px;
-    font-size: 0.7rem;
-    font-weight: 600;
-    margin-left: 6px;
-  }
-  .badge-warn { background: #fef3c7; color: #92400e; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 0.7rem; font-weight: 600; margin-left: 6px; }
+  .badge-warn   { background: #fef3c7; color: #92400e; }
   .badge-danger { background: #fee2e2; color: #991b1b; }
-  .badge-ok { background: #dcfce7; color: #166534; }
+  .badge-ok     { background: #dcfce7; color: #166534; }
 
   .notice-box {
     background: #fffbeb;
@@ -351,25 +259,14 @@
     margin-top: 10px;
     line-height: 1.5;
   }
-  .notice-box .icon { margin-right: 4px; }
 
-  /* Delta Na input row */
   .delta-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
   .delta-inputs .field-group { margin-bottom: 0; }
 
-  /* Placeholder state */
-  .placeholder {
-    text-align: center;
-    padding: 50px 20px;
-    color: var(--gray-300);
-  }
-  .placeholder .icon { font-size: 3rem; margin-bottom: 10px; }
+  .placeholder { text-align: center; padding: 40px 20px; color: var(--gray-300); }
+  .placeholder .icon { font-size: 2.5rem; margin-bottom: 8px; }
   .placeholder p { font-size: 0.9rem; }
 
-  /* Divider */
-  .divider { height: 1px; background: var(--gray-100); margin: 14px 0; }
-
-  /* Highlight TEE */
   .tee-highlight {
     background: linear-gradient(135deg, var(--primary-light), #d0e8ff);
     border: 2px solid var(--primary);
@@ -380,15 +277,56 @@
   }
   .tee-highlight .label { font-size: 0.8rem; color: var(--primary); font-weight: 700; margin-bottom: 4px; }
   .tee-highlight .value { font-size: 2rem; font-weight: 800; color: var(--primary); }
-  .tee-highlight .sub { font-size: 0.75rem; color: var(--gray-600); margin-top: 2px; }
+  .tee-highlight .sub   { font-size: 0.75rem; color: var(--gray-600); margin-top: 2px; }
 
-  /* Disclaimer footer */
-  .disclaimer {
-    text-align: center;
-    font-size: 0.72rem;
-    color: var(--gray-300);
-    margin-top: 16px;
-    padding-bottom: 8px;
+  .disclaimer { text-align: center; font-size: 0.72rem; color: var(--gray-300); margin-top: 16px; padding-bottom: 8px; }
+
+  /* ===== モバイル（~900px） ===== */
+  @media (max-width: 900px) {
+    body { padding: 8px; }
+    header { padding: 10px 14px; margin-bottom: 8px; }
+    header .icon { font-size: 1.2rem; }
+    header h1 { font-size: 0.95rem; }
+    header p { display: none; }
+    .top-panel { padding-bottom: 8px; }
+
+    /* 上半分：1カラム（カード全幅）*/
+    .top-grid { grid-template-columns: 1fr; gap: 8px; }
+
+    /* 患者情報フィールドを2カラムグリッドに（カードが全幅なので十分な幅がある） */
+    .top-grid > .card:first-child .card-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 10px;
+    }
+    .top-grid > .card:first-child .card-body .field-group:first-child {
+      grid-column: 1 / -1; /* 性別は全幅 */
+    }
+    .top-grid > .card:first-child .card-body .field-group {
+      margin-bottom: 0;
+    }
+
+    .card-header { padding: 8px 12px; font-size: 0.82rem; }
+    .card-body { padding: 10px 12px; }
+    .field-group { margin-bottom: 8px; }
+    .field-group label { font-size: 0.72rem; margin-bottom: 3px; }
+    .field-row input, .field-row select { padding: 6px 8px; font-size: 0.9rem; }
+    .field-row .unit { font-size: 0.72rem; min-width: 38px; }
+    .gender-toggle label { padding: 7px 4px; font-size: 0.85rem; }
+    .slider-hint { font-size: 0.68rem; }
+    .slider-value { min-width: 34px; font-size: 0.9rem; padding: 2px 5px; }
+    .tab-btn { font-size: 0.78rem; padding: 10px 6px; }
+
+    /* 結果カードを1カラム＋コンパクト化 */
+    .result-grid { grid-template-columns: 1fr; }
+    .result-value { font-size: 1.1rem; }
+    .tee-highlight .value { font-size: 1.5rem; }
+    .result-card { padding: 9px 12px; }
+    .result-card-wide { padding: 9px 12px; }
+  }
+
+  @media (max-width: 480px) {
+    .tab-btn { font-size: 0.72rem; padding: 10px 4px; }
   }
 </style>
 </head>
@@ -408,9 +346,7 @@
 
     <!-- 左：患者情報 -->
     <div class="card">
-      <div class="card-header blue">
-        <span>👤</span> 患者情報
-      </div>
+      <div class="card-header blue"><span>👤</span> 患者情報</div>
       <div class="card-body">
 
         <div class="field-group">
@@ -466,11 +402,9 @@
       </div>
     </div>
 
-    <!-- 右：補正係数 + ボタン -->
+    <!-- 右：補正係数 -->
     <div class="card">
-      <div class="card-header teal">
-        <span>⚡</span> 補正係数
-      </div>
+      <div class="card-header teal"><span>⚡</span> 補正係数</div>
       <div class="card-body">
 
         <div class="field-group">
@@ -482,17 +416,14 @@
           <div class="slider-hint">寝たきり:1.0〜1.1｜ベッド上安静:1.2｜トイレ歩行:1.3｜一般職業:1.5</div>
         </div>
 
-        <div class="field-group">
+        <div class="field-group" style="margin-bottom:0;">
           <label>損傷係数（SF）</label>
           <div class="slider-row">
             <input type="range" id="sf" min="0.7" max="1.5" step="0.05" value="1.2">
             <div class="slider-value" id="sf-val">1.20</div>
           </div>
-          <div class="slider-hint">飢餓:0.7｜ストレス無し:1.0｜定時手術/軽傷感染症:1.2｜外傷/骨折:1.35｜重症感染症:1.5</div>
+          <div class="slider-hint">飢餓:0.7｜ストレス無し:1.0｜定時手術/軽傷感染症:1.2｜外傷/骨折:1.35｜重症感染症/CO2ナルコーシス:1.5</div>
         </div>
-
-        <button class="calc-btn" onclick="calculate()">🔢 計算する</button>
-        <button class="reset-btn" onclick="resetForm()">↺ リセット</button>
 
       </div>
     </div>
@@ -503,42 +434,29 @@
 <!-- ===== 下半分：タブ切り替え結果パネル ===== -->
 <div class="tab-container">
   <div class="tab-bar">
-    <button class="tab-btn active" data-tab="tab-water" onclick="switchTab('tab-water')">💧 水分量・エネルギー量</button>
-    <button class="tab-btn" data-tab="tab-deficit" onclick="switchTab('tab-deficit')">⚠️ 欠乏量計算</button>
-    <button class="tab-btn" data-tab="tab-delta" onclick="switchTab('tab-delta')">📐 ΔNa計算</button>
+    <button class="tab-btn active" data-tab="tab-water"   onclick="switchTab('tab-water')">💧 水分量・エネルギー量</button>
+    <button class="tab-btn"        data-tab="tab-deficit" onclick="switchTab('tab-deficit')">⚠️ 欠乏量計算</button>
+    <button class="tab-btn"        data-tab="tab-delta"   onclick="switchTab('tab-delta')">📐 ΔNa計算</button>
   </div>
 
   <!-- タブ1：水分必要量・エネルギー量 -->
   <div id="tab-water" class="tab-content active">
-    <div class="card">
-      <div class="card-body">
-        <div class="placeholder">
-          <div class="icon">📋</div>
-          <p>患者情報を入力して「計算する」を押してください</p>
-        </div>
-      </div>
-    </div>
+    <div class="card"><div class="card-body">
+      <div class="placeholder"><div class="icon">📋</div><p>入力内容を確認してください</p></div>
+    </div></div>
   </div>
 
   <!-- タブ2：欠乏量計算 -->
   <div id="tab-deficit" class="tab-content">
-    <div class="card">
-      <div class="card-body">
-        <div class="placeholder">
-          <div class="icon">📋</div>
-          <p>患者情報を入力して「計算する」を押してください</p>
-        </div>
-      </div>
-    </div>
+    <div class="card"><div class="card-body">
+      <div class="placeholder"><div class="icon">📋</div><p>入力内容を確認してください</p></div>
+    </div></div>
   </div>
 
-  <!-- タブ3：ΔNa計算（輸液成分入力 + 結果） -->
+  <!-- タブ3：ΔNa計算 -->
   <div id="tab-delta" class="tab-content">
-    <!-- 静的：ΔNa計算用入力 -->
     <div class="card" style="margin-bottom:16px;">
-      <div class="card-header amber">
-        <span>💧</span> ΔNa計算用 輸液成分（任意）
-      </div>
+      <div class="card-header amber"><span>💧</span> ΔNa計算用 輸液成分（任意）</div>
       <div class="card-body">
         <div class="delta-inputs">
           <div class="field-group">
@@ -558,16 +476,10 @@
         </div>
       </div>
     </div>
-    <!-- 動的：calculate() が描画 -->
     <div id="delta-result-area">
-      <div class="card">
-        <div class="card-body">
-          <div class="placeholder">
-            <div class="icon">📐</div>
-            <p>患者情報を入力して「計算する」を押してください</p>
-          </div>
-        </div>
-      </div>
+      <div class="card"><div class="card-body">
+        <div class="placeholder"><div class="icon">📐</div><p>入力内容を確認してください</p></div>
+      </div></div>
     </div>
   </div>
 
@@ -578,14 +490,25 @@
 </div>
 
 <script>
-  // Slider live update
+  // ===== スライダー表示更新 + 自動計算 =====
   document.getElementById('af').addEventListener('input', function() {
     document.getElementById('af-val').textContent = parseFloat(this.value).toFixed(1);
+    calculate();
   });
   document.getElementById('sf').addEventListener('input', function() {
     document.getElementById('sf-val').textContent = parseFloat(this.value).toFixed(2);
+    calculate();
   });
 
+  // ===== 全入力フィールドで自動計算 =====
+  ['weight', 'na', 'k', 'hct', 'urine', 'fluid-na', 'fluid-k'].forEach(id => {
+    document.getElementById(id).addEventListener('input', calculate);
+  });
+  document.querySelectorAll('input[name="gender"]').forEach(el => {
+    el.addEventListener('change', calculate);
+  });
+
+  // ===== タブ切り替え =====
   function switchTab(tabId) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(p => p.classList.remove('active'));
@@ -593,10 +516,7 @@
     document.getElementById(tabId).classList.add('active');
   }
 
-  function placeholderHtml(icon, text) {
-    return `<div class="card"><div class="card-body"><div class="placeholder"><div class="icon">${icon}</div><p>${text}</p></div></div></div>`;
-  }
-
+  // ===== ユーティリティ =====
   function fmt(val, digits=1) {
     if (val === null || val === undefined || isNaN(val)) return '—';
     return parseFloat(val.toFixed(digits)).toLocaleString('ja-JP');
@@ -608,57 +528,56 @@
     return `<span class="badge badge-ok">正常域</span>`;
   }
 
+  // ===== 計算 =====
   function calculate() {
     const gender = document.querySelector('input[name="gender"]:checked').value;
     const isMale = gender === 'male';
     const tbwFactor = isMale ? 0.6 : 0.5;
     const beeFactor = isMale ? 14.1 : 10.8;
 
-    const weight = parseFloat(document.getElementById('weight').value) || 0;
-    const na = parseFloat(document.getElementById('na').value) || 0;
-    const k = parseFloat(document.getElementById('k').value) || 0;
-    const hct = parseFloat(document.getElementById('hct').value) || 0;
-    const urinePerHour = parseFloat(document.getElementById('urine').value) || 0;
-    const af = parseFloat(document.getElementById('af').value) || 1.0;
-    const sf = parseFloat(document.getElementById('sf').value) || 1.0;
-    const fluidNa = parseFloat(document.getElementById('fluid-na').value) || 0;
-    const fluidK = parseFloat(document.getElementById('fluid-k').value) || 0;
+    const weight       = parseFloat(document.getElementById('weight').value)   || 0;
+    const na           = parseFloat(document.getElementById('na').value)        || 0;
+    const k            = parseFloat(document.getElementById('k').value)         || 0;
+    const hct          = parseFloat(document.getElementById('hct').value)       || 0;
+    const urinePerHour = parseFloat(document.getElementById('urine').value)     || 0;
+    const af           = parseFloat(document.getElementById('af').value)        || 1.0;
+    const sf           = parseFloat(document.getElementById('sf').value)        || 1.0;
+    const fluidNa      = parseFloat(document.getElementById('fluid-na').value)  || 0;
+    const fluidK       = parseFloat(document.getElementById('fluid-k').value)   || 0;
 
-    // === 水分必要量 ===
-    const water30 = weight * 30;
-    const urine24 = urinePerHour * 24;
+    // 水分必要量
+    const water30    = weight * 30;
+    const urine24    = urinePerHour * 24;
     const insensible = weight * 15;
     const waterUrine = urine24 + insensible;
 
-    // === BEE & TEE ===
+    // BEE & TEE
     const bee = beeFactor * weight + 620;
     const tee = bee * af * sf;
 
-    // === 蛋白質・脂質・炭水化物 ===
-    const protein_g = weight * 1.0;
+    // 栄養素
+    const protein_g    = weight * 1.0;
     const protein_kcal = protein_g * 4;
-    const fat_kcal = bee * 0.3;
-    const fat_g = fat_kcal / 9;
-    const carb_kcal = bee - protein_kcal - fat_kcal;
+    const fat_kcal     = bee * 0.3;
+    const fat_g        = fat_kcal / 9;
+    const carb_kcal    = bee - protein_kcal - fat_kcal;
 
-    // === 水分欠乏量 ===
+    // 水分欠乏量
     const waterDefHiNa = weight * tbwFactor * (na / 150 - 1) * 1000;
-    const waterDefHct = (1 - 45 / hct) * weight * tbwFactor * 1000;
+    const waterDefHct  = (1 - 45 / hct) * weight * tbwFactor * 1000;
 
-    // === Na欠乏量 ===
-    const naDeficit = weight * tbwFactor * (140 - na);
-
-    // === K欠乏量 ===
+    // Na・K欠乏量
+    const naDeficit    = weight * tbwFactor * (140 - na);
     const kDeficitHigh = (4 - k) * 100;
-    const kDeficitLow = (4 - k) * 200;
+    const kDeficitLow  = (4 - k) * 200;
 
-    // === ΔNa (Adrogue-Medias) ===
-    const tbw = weight * tbwFactor;
+    // ΔNa (Adrogue-Medias)
+    const tbw    = weight * tbwFactor;
     const deltaNa = (fluidNa + fluidK - na) / (tbw + 1);
 
-    // === Na/K/Hct 判定 ===
+    // 判定バッジ
     const naStatus = getBadge(na, 135, 145);
-    const kStatus = getBadge(k, 3.5, 5.0);
+    const kStatus  = getBadge(k,  3.5, 5.0);
 
     // ===== タブ1：水分必要量・エネルギー量 =====
     document.getElementById('tab-water').innerHTML = `
@@ -678,7 +597,7 @@
             </div>
           </div>
           <div class="notice-box" style="margin-top:10px;">
-            <span class="icon">ℹ️</span>不感蒸泄量は 体重 × 15 ml で算出しています
+            ℹ️ 不感蒸泄量は 体重 × 15 ml で算出しています
           </div>
         </div>
       </div>
@@ -688,10 +607,9 @@
         <div class="card-body">
           <div class="tee-highlight">
             <div class="label">必要エネルギー量（TEE = BEE × AF × SF）</div>
-            <div class="value">${fmt(tee, 0)} <span style="font-size:1rem; font-weight:400;">kcal/日</span></div>
+            <div class="value">${fmt(tee, 0)} <span style="font-size:1rem;font-weight:400;">kcal/日</span></div>
             <div class="sub">${fmt(bee,1)} kcal × ${af.toFixed(1)} × ${sf.toFixed(2)}</div>
           </div>
-
           <div class="result-section">
             <div class="result-section-title">基礎代謝（BEE）</div>
             <div class="result-card-wide blue">
@@ -699,12 +617,11 @@
                 <span class="formula-label">${isMale ? '男性式' : '女性式'}（簡易式）</span>
                 <span class="formula-result" style="color:var(--primary);">${fmt(bee, 2)} kcal</span>
               </div>
-              <div style="font-size:0.75rem; color:var(--gray-600); margin-top:4px;">
+              <div style="font-size:0.75rem;color:var(--gray-600);margin-top:4px;">
                 ${beeFactor} × ${weight} kg + 620 = ${fmt(bee, 2)} kcal
               </div>
             </div>
           </div>
-
           <div class="result-section">
             <div class="result-section-title">栄養素の目安（BEE基準）</div>
             <div class="result-grid">
@@ -718,16 +635,15 @@
                 <div class="result-value teal">${fmt(fat_g, 1)}<span class="result-unit">g</span></div>
                 <div class="result-sub">${fmt(fat_kcal, 1)} kcal</div>
               </div>
-              <div class="result-card amber" style="grid-column: 1/-1;">
+              <div class="result-card amber" style="grid-column:1/-1;">
                 <div class="result-label">炭水化物（BEE − 蛋白 − 脂質）</div>
                 <div class="result-value amber">${fmt(carb_kcal, 1)}<span class="result-unit">kcal</span></div>
                 <div class="result-sub">参考値（BEEの50%以上目標）</div>
               </div>
             </div>
           </div>
-
           <div class="notice-box">
-            <span class="icon">ℹ️</span>Na: 60〜100 mEq/日｜K: 40〜60 mEq/日 が一般的な必要量の目安です
+            ℹ️ Na: 60〜100 mEq/日｜K: 40〜60 mEq/日 が一般的な必要量の目安です
           </div>
         </div>
       </div>
@@ -738,11 +654,8 @@
       <div class="card">
         <div class="card-header amber"><span>⚠️</span> 欠乏量の計算</div>
         <div class="card-body">
-
           <div class="result-section">
-            <div class="result-section-title">
-              検査値 ${isMale ? '（男性）' : '（女性）'}
-            </div>
+            <div class="result-section-title">検査値 ${isMale ? '（男性）' : '（女性）'}</div>
             <div class="result-grid">
               <div class="result-card ${na < 135 ? 'danger' : na > 145 ? 'amber' : 'gray'}">
                 <div class="result-label">血清 Na ${naStatus}</div>
@@ -756,7 +669,6 @@
               </div>
             </div>
           </div>
-
           <div class="result-section">
             <div class="result-section-title">水分欠乏量</div>
             <div class="result-card-wide ${waterDefHiNa >= 0 ? 'blue' : 'gray'}">
@@ -764,7 +676,7 @@
                 <span class="formula-label">高Na血症時（Na基準）${waterDefHiNa < 0 ? '<span class="badge badge-danger">使用不可</span>' : ''}</span>
                 <span class="formula-result" style="color:${waterDefHiNa >= 0 ? 'var(--primary)' : 'var(--gray-600)'};">${fmt(waterDefHiNa, 1)} ml</span>
               </div>
-              <div style="font-size:0.73rem; color:var(--gray-600); margin-top:2px;">
+              <div style="font-size:0.73rem;color:var(--gray-600);margin-top:2px;">
                 ${weight} kg × ${tbwFactor} × (${na}/150 − 1)
               </div>
             </div>
@@ -773,12 +685,11 @@
                 <span class="formula-label">Hct使用法 ${waterDefHct < 0 ? '<span class="badge badge-danger">使用不可</span>' : ''}</span>
                 <span class="formula-result" style="color:${waterDefHct >= 0 ? 'var(--accent)' : 'var(--gray-600)'};">${fmt(waterDefHct, 1)} ml</span>
               </div>
-              <div style="font-size:0.73rem; color:var(--gray-600); margin-top:2px;">
+              <div style="font-size:0.73rem;color:var(--gray-600);margin-top:2px;">
                 (1 − 45/${hct}%) × ${weight} kg × ${tbwFactor}
               </div>
             </div>
           </div>
-
           <div class="result-section">
             <div class="result-section-title">Na 欠乏量</div>
             <div class="result-card-wide ${naDeficit > 0 ? 'amber' : 'gray'}">
@@ -786,12 +697,11 @@
                 <span class="formula-label">${naDeficit > 0 ? 'Na補充推奨' : 'Na過剰の可能性'}</span>
                 <span class="formula-result" style="color:${naDeficit > 0 ? 'var(--warn)' : 'var(--gray-600)'};">${fmt(naDeficit, 1)} mEq</span>
               </div>
-              <div style="font-size:0.73rem; color:var(--gray-600); margin-top:2px;">
+              <div style="font-size:0.73rem;color:var(--gray-600);margin-top:2px;">
                 ${weight} kg × ${tbwFactor} × (140 − ${na})
               </div>
             </div>
           </div>
-
           <div class="result-section">
             <div class="result-section-title">K 欠乏量</div>
             <div class="result-grid">
@@ -806,9 +716,9 @@
                 <div class="result-sub">(4 − ${k}) × 200</div>
               </div>
             </div>
-            ${(kDeficitHigh < 0 || kDeficitLow < 0) ? `<div class="notice-box" style="margin-top:8px;"><span class="icon">⚠️</span>K値が高値のため欠乏量は負値となっています。K補充は不要または禁忌の可能性があります。</div>` : ''}
-            <div class="notice-box" style="margin-top:8px; background:#eff6ff; border-color:#93c5fd; color:#1e40af;">
-              <span class="icon">📌</span><strong>K投与の３原則：</strong>濃度 ≦ 40 mEq/L｜速度 ≦ 20 mEq/h｜１日量 ≦ 100 mEq/日
+            ${(kDeficitHigh < 0 || kDeficitLow < 0) ? `<div class="notice-box" style="margin-top:8px;">⚠️ K値が高値のため欠乏量は負値です。K補充は不要または禁忌の可能性があります。</div>` : ''}
+            <div class="notice-box" style="margin-top:8px;background:#eff6ff;border-color:#93c5fd;color:#1e40af;">
+              📌 <strong>K投与の３原則：</strong>濃度 ≦ 40 mEq/L｜速度 ≦ 20 mEq/h｜１日量 ≦ 100 mEq/日
             </div>
           </div>
         </div>
@@ -818,47 +728,26 @@
     // ===== タブ3：ΔNa結果 =====
     document.getElementById('delta-result-area').innerHTML = `
       <div class="card">
-        <div class="card-header" style="background:#f5f3ff; color:#6d28d9; border-bottom:2px solid #7c3aed;"><span>📐</span> ΔNa値（Adrogue-Medias式）</div>
+        <div class="card-header" style="background:#f5f3ff;color:#6d28d9;border-bottom:2px solid #7c3aed;"><span>📐</span> ΔNa値（Adrogue-Medias式）</div>
         <div class="card-body">
-          <div class="result-card-wide" style="background:#f5f3ff; border-left:4px solid #7c3aed;">
+          <div class="result-card-wide" style="background:#f5f3ff;border-left:4px solid #7c3aed;">
             <div class="formula-row">
               <span class="formula-label">輸液1L投与時の予測Na変化</span>
-              <span class="formula-result" style="color:#6d28d9; font-size:1.4rem;">${fmt(deltaNa, 3)} mEq/L</span>
+              <span class="formula-result" style="color:#6d28d9;font-size:1.4rem;">${fmt(deltaNa, 3)} mEq/L</span>
             </div>
-            <div style="font-size:0.73rem; color:var(--gray-600); margin-top:4px; line-height:1.6;">
+            <div style="font-size:0.73rem;color:var(--gray-600);margin-top:4px;line-height:1.6;">
               ΔNa = (輸液中Na ${fluidNa} + 輸液中K ${fluidK} − 血清Na ${na}) ÷ (TBW ${fmt(tbw,2)} + 1)
             </div>
           </div>
-          <div class="notice-box" style="background:#f5f3ff; border-color:#a78bfa; color:#5b21b6;">
-            <span class="icon">ℹ️</span>TBW = 体重 ${weight} kg × ${tbwFactor}（${isMale ? '男性' : '女性'}係数）= ${fmt(tbw,2)} L
+          <div class="notice-box" style="background:#f5f3ff;border-color:#a78bfa;color:#5b21b6;">
+            ℹ️ TBW = 体重 ${weight} kg × ${tbwFactor}（${isMale ? '男性' : '女性'}係数）= ${fmt(tbw,2)} L
           </div>
         </div>
       </div>
     `;
   }
 
-  function resetForm() {
-    document.getElementById('female').checked = true;
-    document.getElementById('weight').value = '';
-    document.getElementById('na').value = '';
-    document.getElementById('k').value = '';
-    document.getElementById('hct').value = '';
-    document.getElementById('urine').value = '';
-    document.getElementById('af').value = 1.0;
-    document.getElementById('sf').value = 1.2;
-    document.getElementById('af-val').textContent = '1.0';
-    document.getElementById('sf-val').textContent = '1.20';
-    document.getElementById('fluid-na').value = 154;
-    document.getElementById('fluid-k').value = 0;
-
-    const msg = '患者情報を入力して「計算する」を押してください';
-    document.getElementById('tab-water').innerHTML = placeholderHtml('💧', msg);
-    document.getElementById('tab-deficit').innerHTML = placeholderHtml('⚠️', msg);
-    document.getElementById('delta-result-area').innerHTML = placeholderHtml('📐', msg);
-    switchTab('tab-water');
-  }
-
-  // Auto-calculate on load with sample data
+  // 初回ロード時に自動計算
   window.addEventListener('load', calculate);
 </script>
 </body>
