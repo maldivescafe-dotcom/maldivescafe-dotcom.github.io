@@ -36,6 +36,8 @@
     color: var(--gray-800);
     min-height: 100vh;
     padding: 16px;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
   header {
@@ -576,9 +578,9 @@
     // 栄養素
     const protein_g    = weight * 1.0;
     const protein_kcal = protein_g * 4;
-    const fat_kcal     = bee * 0.3;
+    const fat_kcal     = tee * 0.3;
     const fat_g        = fat_kcal / 9;
-    const carb_kcal    = bee - protein_kcal - fat_kcal;
+    const carb_kcal    = tee - protein_kcal - fat_kcal;
 
     // 水分欠乏量
     const waterDefHiNa = weight * tbwFactor * (na / 150 - 1) * 1000;
@@ -647,7 +649,7 @@
             </div>
           </div>
           <div class="result-section">
-            <div class="result-section-title">栄養素の目安（BEE基準）</div>
+            <div class="result-section-title">栄養素の目安（TEE基準）</div>
             <div class="result-grid">
               <div class="result-card blue">
                 <div class="result-row">
@@ -658,14 +660,14 @@
               </div>
               <div class="result-card teal">
                 <div class="result-row">
-                  <span class="result-label">脂質（BEEの30%）</span>
+                  <span class="result-label">脂質（TEEの30%）</span>
                   <span class="result-value teal">${fmt(fat_g, 1)}<span class="result-unit">g</span></span>
                 </div>
                 <div class="result-sub">${fmt(fat_kcal, 1)} kcal</div>
               </div>
               <div class="result-card amber" style="grid-column:1/-1;">
                 <div class="result-row">
-                  <span class="result-label">炭水化物（BEE − 蛋白 − 脂質）</span>
+                  <span class="result-label">炭水化物（TEE − 蛋白 − 脂質）</span>
                   <span class="result-value amber">${fmt(carb_kcal, 1)}<span class="result-unit">kcal</span></span>
                 </div>
                 <div class="result-sub">参考値（BEEの50%以上目標）</div>
