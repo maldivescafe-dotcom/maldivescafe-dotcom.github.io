@@ -191,7 +191,7 @@
     padding: 3px 6px;
     border-radius: 5px;
   }
-  .slider-hint { flex-basis: 100%; font-size: 0.72rem; color: var(--gray-600); line-height: 1.5; }
+  .slider-hint { flex-basis: 100%; font-size: 0.63rem; color: var(--gray-600); line-height: 1.5; opacity: 0.85; }
 
   /* Results */
   .result-section { margin-bottom: 16px; }
@@ -219,8 +219,18 @@
   .result-card.danger { background: var(--danger-light);  border-left: 4px solid var(--danger); }
   .result-card.gray   { background: var(--gray-50);       border-left: 4px solid var(--gray-300); }
 
-  .result-label { font-size: 0.75rem; color: var(--gray-600); margin-bottom: 3px; }
-  .result-value { font-size: 1.4rem; font-weight: 700; }
+  /* 2行レイアウト：ラベルと値を同じ行に */
+  .result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 6px;
+    margin-bottom: 2px;
+  }
+  .result-row .result-label { flex: 1; min-width: 0; }
+
+  .result-label { font-size: 0.75rem; color: var(--gray-600); }
+  .result-value { font-size: 1.2rem; font-weight: 700; }
   .result-value.blue   { color: var(--primary); }
   .result-value.teal   { color: var(--accent); }
   .result-value.amber  { color: var(--warn); }
@@ -593,13 +603,17 @@
         <div class="card-body">
           <div class="result-grid">
             <div class="result-card blue">
-              <div class="result-label">体重×30ml/kg法</div>
-              <div class="result-value blue">${fmt(water30, 0)}<span class="result-unit">ml/日</span></div>
+              <div class="result-row">
+                <span class="result-label">体重×30ml/kg法</span>
+                <span class="result-value blue">${fmt(water30, 0)}<span class="result-unit">ml/日</span></span>
+              </div>
               <div class="result-sub">${fmt(weight,1)} kg × 30 ml</div>
             </div>
             <div class="result-card teal">
-              <div class="result-label">尿量＋不感蒸泄法</div>
-              <div class="result-value teal">${fmt(waterUrine, 1)}<span class="result-unit">ml/日</span></div>
+              <div class="result-row">
+                <span class="result-label">尿量＋不感蒸泄法</span>
+                <span class="result-value teal">${fmt(waterUrine, 1)}<span class="result-unit">ml/日</span></span>
+              </div>
               <div class="result-sub">尿量 ${fmt(urine24,0)}ml + 不感蒸泄 ${fmt(insensible,1)}ml</div>
             </div>
           </div>
@@ -614,8 +628,10 @@
         <div class="card-body">
           <div class="tee-highlight">
             <div class="label">必要エネルギー量（TEE = BEE × AF × SF）</div>
-            <div class="value">${fmt(tee, 0)} <span style="font-size:1rem;font-weight:400;">kcal/日</span></div>
-            <div class="sub">${fmt(bee,1)} kcal × ${af.toFixed(1)} × ${sf.toFixed(2)}</div>
+            <div style="display:flex;justify-content:center;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:4px;">
+              <div class="value">${fmt(tee, 0)} <span style="font-size:1rem;font-weight:400;">kcal/日</span></div>
+              <div class="sub" style="margin-top:0;">${fmt(bee,1)} kcal × ${af.toFixed(1)} × ${sf.toFixed(2)}</div>
+            </div>
           </div>
           <div class="result-section">
             <div class="result-section-title">基礎代謝（BEE）</div>
@@ -633,18 +649,24 @@
             <div class="result-section-title">栄養素の目安（BEE基準）</div>
             <div class="result-grid">
               <div class="result-card blue">
-                <div class="result-label">蛋白質</div>
-                <div class="result-value blue">${fmt(protein_g, 1)}<span class="result-unit">g</span></div>
+                <div class="result-row">
+                  <span class="result-label">蛋白質</span>
+                  <span class="result-value blue">${fmt(protein_g, 1)}<span class="result-unit">g</span></span>
+                </div>
                 <div class="result-sub">${fmt(protein_kcal, 1)} kcal（1.0g/kg）</div>
               </div>
               <div class="result-card teal">
-                <div class="result-label">脂質（BEEの30%）</div>
-                <div class="result-value teal">${fmt(fat_g, 1)}<span class="result-unit">g</span></div>
+                <div class="result-row">
+                  <span class="result-label">脂質（BEEの30%）</span>
+                  <span class="result-value teal">${fmt(fat_g, 1)}<span class="result-unit">g</span></span>
+                </div>
                 <div class="result-sub">${fmt(fat_kcal, 1)} kcal</div>
               </div>
               <div class="result-card amber" style="grid-column:1/-1;">
-                <div class="result-label">炭水化物（BEE − 蛋白 − 脂質）</div>
-                <div class="result-value amber">${fmt(carb_kcal, 1)}<span class="result-unit">kcal</span></div>
+                <div class="result-row">
+                  <span class="result-label">炭水化物（BEE − 蛋白 − 脂質）</span>
+                  <span class="result-value amber">${fmt(carb_kcal, 1)}<span class="result-unit">kcal</span></span>
+                </div>
                 <div class="result-sub">参考値（BEEの50%以上目標）</div>
               </div>
             </div>
@@ -665,13 +687,17 @@
             <div class="result-section-title">検査値 ${isMale ? '（男性）' : '（女性）'}</div>
             <div class="result-grid">
               <div class="result-card ${na < 135 ? 'danger' : na > 145 ? 'amber' : 'gray'}">
-                <div class="result-label">血清 Na ${naStatus}</div>
-                <div class="result-value ${na < 135 ? 'danger' : na > 145 ? 'amber' : 'gray'}">${fmt(na, 1)}<span class="result-unit">mEq/L</span></div>
+                <div class="result-row">
+                  <span class="result-label">血清 Na ${naStatus}</span>
+                  <span class="result-value ${na < 135 ? 'danger' : na > 145 ? 'amber' : 'gray'}">${fmt(na, 1)}<span class="result-unit">mEq/L</span></span>
+                </div>
                 <div class="result-sub">正常: 135〜145 mEq/L</div>
               </div>
               <div class="result-card ${k < 3.5 ? 'danger' : k > 5.0 ? 'amber' : 'gray'}">
-                <div class="result-label">血清 K ${kStatus}</div>
-                <div class="result-value ${k < 3.5 ? 'danger' : k > 5.0 ? 'amber' : 'gray'}">${fmt(k, 1)}<span class="result-unit">mEq/L</span></div>
+                <div class="result-row">
+                  <span class="result-label">血清 K ${kStatus}</span>
+                  <span class="result-value ${k < 3.5 ? 'danger' : k > 5.0 ? 'amber' : 'gray'}">${fmt(k, 1)}<span class="result-unit">mEq/L</span></span>
+                </div>
                 <div class="result-sub">正常: 3.5〜5.0 mEq/L</div>
               </div>
             </div>
@@ -713,13 +739,17 @@
             <div class="result-section-title">K 欠乏量</div>
             <div class="result-grid">
               <div class="result-card ${kDeficitHigh < 0 ? 'danger' : 'amber'}">
-                <div class="result-label">K &gt; 3 mEq/L 時</div>
-                <div class="result-value ${kDeficitHigh < 0 ? 'danger' : 'amber'}">${fmt(kDeficitHigh, 0)}<span class="result-unit">mEq</span></div>
+                <div class="result-row">
+                  <span class="result-label">K &gt; 3 mEq/L 時</span>
+                  <span class="result-value ${kDeficitHigh < 0 ? 'danger' : 'amber'}">${fmt(kDeficitHigh, 0)}<span class="result-unit">mEq</span></span>
+                </div>
                 <div class="result-sub">(4 − ${k}) × 100</div>
               </div>
               <div class="result-card ${kDeficitLow < 0 ? 'danger' : 'amber'}">
-                <div class="result-label">K ≦ 3 mEq/L 時</div>
-                <div class="result-value ${kDeficitLow < 0 ? 'danger' : 'amber'}">${fmt(kDeficitLow, 0)}<span class="result-unit">mEq</span></div>
+                <div class="result-row">
+                  <span class="result-label">K ≦ 3 mEq/L 時</span>
+                  <span class="result-value ${kDeficitLow < 0 ? 'danger' : 'amber'}">${fmt(kDeficitLow, 0)}<span class="result-unit">mEq</span></span>
+                </div>
                 <div class="result-sub">(4 − ${k}) × 200</div>
               </div>
             </div>
