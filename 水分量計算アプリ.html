@@ -120,15 +120,21 @@
   .card-header.amber { background: var(--warn-light);    color: var(--warn);    border-bottom: 2px solid var(--warn); }
   .card-body { padding: 18px; }
 
-  .field-group { margin-bottom: 14px; }
+  .field-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 8px;
+    margin-bottom: 10px;
+  }
   .field-group label {
-    display: block;
+    flex-shrink: 0;
+    white-space: nowrap;
     font-size: 0.8rem;
     font-weight: 600;
     color: var(--gray-600);
-    margin-bottom: 5px;
   }
-  .field-row { display: flex; align-items: center; gap: 8px; }
+  .field-row { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
   .field-row input, .field-row select {
     flex: 1;
     padding: 9px 12px;
@@ -153,6 +159,7 @@
 
   .gender-toggle {
     display: flex;
+    flex: 1;
     border-radius: 7px;
     overflow: hidden;
     border: 1.5px solid var(--gray-200);
@@ -172,7 +179,7 @@
   .gender-toggle label:hover { background: var(--primary-light); }
 
   /* Sliders */
-  .slider-row { display: flex; align-items: center; gap: 10px; }
+  .slider-row { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
   .slider-row input[type=range] { flex: 1; accent-color: var(--primary); cursor: pointer; }
   .slider-value {
     min-width: 38px;
@@ -184,7 +191,7 @@
     padding: 3px 6px;
     border-radius: 5px;
   }
-  .slider-hint { font-size: 0.72rem; color: var(--gray-600); margin-top: 3px; line-height: 1.5; }
+  .slider-hint { flex-basis: 100%; font-size: 0.72rem; color: var(--gray-600); line-height: 1.5; }
 
   /* Results */
   .result-section { margin-bottom: 16px; }
@@ -308,8 +315,8 @@
 
     .card-header { padding: 8px 12px; font-size: 0.82rem; }
     .card-body { padding: 10px 12px; }
-    .field-group { margin-bottom: 8px; }
-    .field-group label { font-size: 0.72rem; margin-bottom: 3px; }
+    .field-group { margin-bottom: 6px; }
+    .field-group label { font-size: 0.72rem; }
     .field-row input, .field-row select { padding: 6px 8px; font-size: 0.9rem; }
     .field-row .unit { font-size: 0.72rem; min-width: 38px; }
     .gender-toggle label { padding: 7px 4px; font-size: 0.85rem; }
