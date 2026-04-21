@@ -316,9 +316,6 @@
       grid-template-columns: 1fr 1fr;
       gap: 6px 10px;
     }
-    .top-grid > .card:first-child .card-body .field-group:first-child {
-      grid-column: 1 / -1; /* 性別は全幅 */
-    }
     .top-grid > .card:first-child .card-body .field-group {
       margin-bottom: 0;
     }
@@ -377,18 +374,18 @@
         </div>
 
         <div class="field-group">
-          <label>体重</label>
-          <div class="field-row">
-            <input type="number" id="weight" value="25.1" step="0.1" min="0">
-            <span class="unit">kg</span>
-          </div>
-        </div>
-
-        <div class="field-group">
           <label>血清 Na</label>
           <div class="field-row">
             <input type="number" id="na" value="126" step="0.1" min="0">
             <span class="unit">mEq/L</span>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label>体重</label>
+          <div class="field-row">
+            <input type="number" id="weight" value="25.1" step="0.1" min="0">
+            <span class="unit">kg</span>
           </div>
         </div>
 
@@ -401,18 +398,18 @@
         </div>
 
         <div class="field-group">
-          <label>Hct</label>
-          <div class="field-row">
-            <input type="number" id="hct" value="32.3" step="0.1" min="0" max="100">
-            <span class="unit">%</span>
-          </div>
-        </div>
-
-        <div class="field-group" style="margin-bottom:0;">
           <label>尿量</label>
           <div class="field-row">
             <input type="number" id="urine" value="30" step="1" min="0">
             <span class="unit">ml/h</span>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label>Hct</label>
+          <div class="field-row">
+            <input type="number" id="hct" value="32.3" step="0.1" min="0" max="100">
+            <span class="unit">%</span>
           </div>
         </div>
 
